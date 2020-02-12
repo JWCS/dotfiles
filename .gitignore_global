@@ -1,0 +1,13 @@
+# Direnv stuff
+.direnv
+.envrc
+
+# Python stuff I'm uncertain about
+__init__.py
+*.egg-info/
+requirements.txt
+setup.py
+
+# YouCompleteMe
+compile_commands.json
+.ycm_extra_conf.py

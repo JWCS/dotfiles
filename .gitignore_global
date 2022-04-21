@@ -11,3 +11,6 @@ setup.py
 # YouCompleteMe
 compile_commands.json
 .ycm_extra_conf.py
+
+# Various editors stuff
+.vscode/

@@ -1,0 +1,13 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+set ts=2 sts=2 sw=2 et
+set autoindent
+set number
+set relativenumber
+syntax on
+set background=dark
+set t_Co=256
+colorscheme koehler
+" set smarttab
+

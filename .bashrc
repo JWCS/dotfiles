@@ -119,13 +119,12 @@ fi
 # Custom adds
 stty -ixon # Stops the Ctrl-S thing in vim
 
+# ROS
+source /opt/ros/melodic/setup.bash
+
 # cuda
 export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64:$LD_LIBRARY_PATH
 export PATH=/usr/local/cuda-9.0/bin:$PATH
-
-# ros
-source /opt/ros/kinetic/setup.bash
-source ~/Workspace/Northstar/ros_ws/devel/setup.bash
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
@@ -156,3 +155,11 @@ show_virtual_env() {
   fi
 }
 PS1='$(show_virtual_env)'$PS1
+
+# opam configuration
+test -r /home/jp-neutrino/.opam/opam-init/init.sh && . /home/jp-neutrino/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+
+# nodejs version manager
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

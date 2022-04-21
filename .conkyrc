@@ -1,0 +1,56 @@
+conky.config = {
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_type = 'desktop',
+    own_window_transparent = true,
+    own_window_hints = 'below',
+    own_window_colour = '660033',
+    own_window_title = 'Loadmeter',
+    double_buffer = true,
+    gap_x = 10,
+    gap_y = 10,
+    alignment = 'top_right',
+    use_xft = true,
+    font = 'Terminus:size=10',
+    xftalpha = 1,
+    override_utf8_locale = true,
+    draw_shades = false,
+    draw_outline = false,
+    default_outline_color = 'black',
+    uppercase = false,
+    default_color = 'ECEAE4',
+    color1 = 'FFFF00',
+    color2 = '01C400',
+    draw_borders = false,
+    stippled_borders = 0,
+    border_inner_margin = 5,
+    border_outer_margin = 0,
+    border_width = 0,
+    draw_graph_borders = false,
+    background = false,
+    use_spacer = 'right',
+    no_buffers = true,
+    short_units = true,
+    pad_percents = 2,
+    update_interval = 3
+}
+
+conky.text = [[
+${font AvantGardeLTMedium:bold:size=10}${color Tan4}Average load past minute ${color slate grey}${hr 2}${font}
+${color1}Best < number of CPU cores: ${color}${alignr}${loadavg 1}
+
+${font AvantGardeLTMedium:bold:size=10}${color Tan4}CPU temperature ${color slate grey}${hr 2}${font}
+${color1}Best < 60: ${color}${alignr}${acpitemp} degrees Celsius
+
+${font AvantGardeLTMedium:bold:size=10}${color Tan4}Swap memory usage ${color slate grey}${hr 2}${font}
+${color1}Zero is best:   ${color}${alignc}${swap} ${alignr}${swapperc}%
+
+${font AvantGardeLTMedium:bold:size=10}${color Tan4}Disk usage ${color slate grey}${hr 2}${font}
+${color1}In use / total: ${color}${alignr}${fs_used /} / ${fs_size /}
+${color1}Preferably < 75:   ${color}${fs_used_perc /}%   ${alignr}${fs_bar 5,100 /}
+
+${font AvantGardeLTMedium:bold:size=10}${color Tan4}Wireless network ${color slate grey}${hr 2}${font}
+${if_existing /proc/net/route wlp2s0}${color1}Access point: ${color}${alignr}${wireless_essid wlp2s0}${endif}
+${color1}Signal strength:     ${color}${alignr}${wireless_link_qual_perc wlp2s0}   ${wireless_link_bar 5,100 wlp2s0}
+${color1}Traffic in / out: ${color}${alignr}${totaldown wlp2s0}  /  ${totalup wlp2s0}
+]]

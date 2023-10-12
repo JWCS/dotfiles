@@ -2,12 +2,11 @@
 #	name = Name
 #	email = Relevant Email
 # Found below
-[include]
-  path = ~/.gitconfig_important
 [push]
 	default = simple
 [core]
 	excludesfile = ~/.gitignore_global
+	editor = vim
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 [alias]
@@ -31,5 +30,3 @@
 [rerere]
 	enabled = true
 	autoupdate = true
-[user]
-	email = 

@@ -65,5 +65,6 @@ buildless (){
 
 export PROMPT_COMMAND='history -a'
 
+alias docker_rmi_none="docker images -a | grep '<none>' | awk '{ print $3; }' | xargs docker rmi"
 
 # ~/.bashrc

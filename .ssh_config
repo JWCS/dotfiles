@@ -1,0 +1,4 @@
+HashKnownHosts yes
+HostKeyAlgorithms +ssh-rsa
+PubkeyAcceptedKeyTypes +ssh-rsa
+

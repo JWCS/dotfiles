@@ -7,6 +7,7 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	editor = vim
+	whitespace = cr-at-eol # Ignore ^M in diffs?
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 [alias]
@@ -30,3 +31,10 @@
 [rerere]
 	enabled = true
 	autoupdate = true
+
+# Win specific
+# https://stackoverflow.com/questions/63810361/how-to-use-meld-as-git-mergetool-difftool-on-wsl2
+#[merge]
+#  tool = meld
+#[mergetool "meld"]
+#  cmd = meld --auto-merge \"$(wslpath -aw $LOCAL)\" \"$(wslpath -aw $BASE)\" \"$(wslpath -aw $REMOTE)\" --output \"$(wslpath -aw $MERGED)\" --label=Local --label=Base --label=Remote --diff \"$(wslpath -aw $BASE)\" \"$(wslpath -aw $LOCAL)\" --diff \"$(wslpath -aw $BASE)\" \"$(wslpath -aw $REMOTE)\"

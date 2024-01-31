@@ -8,6 +8,8 @@
 	excludesfile = ~/.gitignore_global
 	editor = vim
 	whitespace = cr-at-eol # Ignore ^M in diffs?
+[init]
+  defaultBranch = master
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 [alias]

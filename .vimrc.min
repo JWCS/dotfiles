@@ -1,0 +1,92 @@
+" Return to last edit position when opening files (You want this!)
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+" Move between windows with control+h/j/k/l
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+xnoremap p "_dP
+
+"" Vim file management
+" Set to autoread when a file is changed from the outside
+set autoread
+" Strip trailing whitespace from file!
+fun! <SID>StripTrailingWhiteSpaces()
+	let l = line(".")
+	let c = col(".")
+	%s/\s\+$//e
+	call cursor(l, c)
+endfun
+autocmd BufWritePre * :call <SID>StripTrailingWhiteSpaces()
+
+set history=500 " Limit history
+let $LANG='en'
+set langmenu=en
+set encoding=utf8
+set ffs=unix,dos,mac
+" No annoying sound on errors
+set noerrorbells
+set novisualbell
+set nobackup
+set nowb
+set noswapfile
+" Correct coloring base
+set t_Co=256
+set background=dark
+" Enable filetype plugins
+filetype plugin on
+filetype indent on
+"" Vim interaction management
+" leader is ' ', escape insert mode is jj
+let mapleader = " "
+inoremap jj <ESC>
+"set mouse=a " Full mouse support?
+" wildmenu
+set wildmenu
+set wildmode=longest:full,full " Alt: 'longest:list,full', idk yet
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc,*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
+
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+
+" Searching
+set ignorecase
+set smartcase
+set hlsearch " Highlight search, " Disable highlight when <leader>[Enter] is pressed
+map <silent> <leader><cr> :noh<cr>
+set incsearch " To make search act as in modern browsers
+set lazyredraw " Don't redraw while executing macros (good perf config)
+set magic " Allows regex
+" Lines
+set nu
+set rnu
+" Uncertain if like
+highlight LineNR ctermfg=LightRed
+set so=7 " Set # lines buffer to cursor for j/k moving
+set cmdheight=2 " Height of cmd bar
+set hid " A buffer becomes hidden when it is abandoned, idk yet
+set showcmd " Shows last cmd in bot right, ex leader!
+" Columns
+set ruler " Uncertain if like
+"set foldcolumn=1 " Add a bit of extra margin to the left
+"set colorcolumn=110 " How far to show 'too far'
+highlight ColorColumn ctermbg=darkgray
+
+"" Vim intra-file management
+set showmatch " Show matching brackets when cursor is over
+set mat=2 " How many tenths of sec to blink on matching brackets
+" Text editing
+set ts=2 sts=2 sw=2 " tabstop, shifttabwidth, shiftwidth
+set smarttab expandtab
+set ai si " autoindent, smartindent
+set wrap " Wrap lines
+syntax enable " Enable syntax highlighting
+" Linebreak on 500 char
+set lbr
+set tw=500
+
+colorscheme desert

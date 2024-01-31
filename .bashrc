@@ -45,6 +45,7 @@ show_virtual_env() {
   fi
 }
 PS1='$(show_virtual_env)'$PS1
+PS1=$PS1'\n> '
 
 # opam configuration
 test -r /home/jp-neutrino/.opam/opam-init/init.sh && . /home/jp-neutrino/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
@@ -65,6 +66,24 @@ buildless (){
 
 export PROMPT_COMMAND='history -a'
 
-alias docker_rmi_none="docker images -a | grep '<none>' | awk '{ print $3; }' | xargs docker rmi"
+alias docker-rmi-none="docker images -a | grep '<none>' | awk '{ print $3; }' | xargs docker rmi"
+function rm-orig(){
+  find ${1:-.} -name '*.orig' -exec rm {} \;
+}
+function meldtool_wsl(){
+  meld --auto-merge \
+    "$(wslpath -aw $LOCAL)" "$(wslpath -aw $BASE)" "$(wslpath -aw $REMOTE)" \
+    --output "$(wslpath -aw $MERGED)" \
+    --label=Local --label=Base --label=Remote \
+    --diff "$(wslpath -aw $BASE)" "$(wslpath -aw $LOCAL)" \
+    --diff "$(wslpath -aw $BASE)" "$(wslpath -aw $REMOTE)"
+}
+function meldtool(){
+  : ${LOCAL:=${1:?}}
+  : ${REMOTE:=${2:?}}
+  : ${MERGED:=${3:?}}
+  : ${BASE:=${3}}
+  meldtool_wsl
+}
 
 # ~/.bashrc

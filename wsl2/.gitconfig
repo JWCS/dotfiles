@@ -1,0 +1,5 @@
+# Win specific
+# https://stackoverflow.com/questions/63810361/how-to-use-meld-as-git-mergetool-difftool-on-wsl2
+[mergetool "meld"]
+	cmd = meld --auto-merge \"$(wslpath -aw $LOCAL)\" \"$(wslpath -aw $BASE)\" \"$(wslpath -aw $REMOTE)\" --output \"$(wslpath -aw $MERGED)\" --label=Local --label=Base --label=Remote --diff \"$(wslpath -aw $BASE)\" \"$(wslpath -aw $LOCAL)\" --diff \"$(wslpath -aw $BASE)\" \"$(wslpath -aw $REMOTE)\"
+

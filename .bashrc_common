@@ -1,0 +1,69 @@
+# ~/.bashrc
+# LAST_CHANGED 2024-09-04
+# Note: this is pushback against the .bashrc being a collection of random stuff,
+# without being sourceable for common, expected things.
+# This still contains gems... but bash specific, or doesn't do anything if not installed
+
+# Custom adds
+[[ $- == *i* ]] && stty -ixon # Stops the Ctrl-S thing in vim # The weird first half is "inapprop ioctl for device stty", only interactive mode
+PATH=~/.local/bin:$PATH
+
+# Eternal bash history.
+# ---------------------
+# Undocumented feature which sets the size to "unlimited".
+# https://stackoverflow.com/questions/9457233/unlimited-bash-history
+unset HISTSIZE
+unset HISTFILESIZE
+export HISTFILESIZE=
+export HISTSIZE=
+export HISTTIMEFORMAT="[%F %T] "
+# Change the file location because certain bash sessions truncate .bash_history file upon close.
+# http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
+export HISTFILE=~/.bash_eternal_history
+# Force prompt to write history after every command.
+# http://superuser.com/questions/20900/bash-history-loss
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+
+# PS1 Mod
+parse_git_repo() {
+  basename -s .git `git config --get remote.origin.url` 2> /dev/null
+}
+parse_git_branch() {
+  # dotfiles home git branch I want to ignore
+  if [ "$(parse_git_repo)" != dotfiles ]; then
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+  fi
+}
+PS1='$(parse_git_branch)\[\033[00m\]'$PS1
+show_virtual_env() {
+  if [[ -n "$VIRTUAL_ENV" && -n "$DIRENV_DIR" ]]; then
+    echo "($(basename $VIRTUAL_ENV))"
+  fi
+}
+PS1='$(show_virtual_env)'$PS1
+PS1=$PS1'\n> '
+
+# bash gems
+cleardir () {
+  ls -A | xargs rm -rf
+}
+
+# docker gems
+#alias docker-rmi-none="docker images -a | grep '<none>' | awk '{ print $3; }' | xargs docker rmi"
+function docker-rmi-none(){
+  docker images -a | awk '/<none>/{system("docker rmi "$3)}'
+}
+
+# git gems
+function rm-orig(){
+  find ${1:-.} -name '*.orig' -exec rm {} \;
+}
+function git-branch-prune(){
+  git fetch -p && git branch -vv | cut -b3- | awk '/: gone]/{system("git branch -d "$1)}'
+}
+
+# Alias completion
+# https://unix.stackexchange.com/questions/4219/how-do-i-get-bash-completion-for-command-aliases
+source ~/.bash_completion.d/complete_alias
+
+

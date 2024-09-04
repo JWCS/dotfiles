@@ -1,13 +1,11 @@
 # ~/.bashrc
-# LAST_CHANGED 2023-08-17
+# LAST_CHANGED 2024-09-04
 # Note, atm I'm using it as a collection of "gems", because I'm in too many envs
+# Update: source .bashrc_common; those are rm'd from here
 
 # This file only contains NEW content; the default installed .bashrc
 # should be moved to this file
 source ~/.bashrc_orig
-
-# Custom adds
-stty -ixon # Stops the Ctrl-S thing in vim
 
 # ROS
 source /opt/ros/melodic/setup.bash
@@ -28,25 +26,6 @@ source $(pyenv root)/completions/pyenv.bash
 eval "$(direnv hook bash)"
 alias tmux='direnv exec / tmux'
 
-# PS1 Mod
-parse_git_repo() {
-  basename -s .git `git config --get remote.origin.url` 2> /dev/null
-}
-parse_git_branch() {
-  # dotfiles home git branch I want to ignore
-  if [ "$(parse_git_repo)" != dotfiles ]; then
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
-  fi
-}
-PS1='$(parse_git_branch)\[\033[00m\]'$PS1
-show_virtual_env() {
-  if [[ -n "$VIRTUAL_ENV" && -n "$DIRENV_DIR" ]]; then
-    echo "($(basename $VIRTUAL_ENV))"
-  fi
-}
-PS1='$(show_virtual_env)'$PS1
-PS1=$PS1'\n> '
-
 # opam configuration
 test -r /home/jp-neutrino/.opam/opam-init/init.sh && . /home/jp-neutrino/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
 
@@ -56,20 +35,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # More Gems:
-cleardir () {
-  ls -A | xargs rm -rf
-}
-
 buildless (){
   unbuffer colcon build $@ 3>&1 1>&2 2>&3 3>&- | less -R
 }
 
-export PROMPT_COMMAND='history -a'
-
-alias docker-rmi-none="docker images -a | grep '<none>' | awk '{ print $3; }' | xargs docker rmi"
-function rm-orig(){
-  find ${1:-.} -name '*.orig' -exec rm {} \;
-}
 function meldtool_wsl(){
   meld --auto-merge \
     "$(wslpath -aw $LOCAL)" "$(wslpath -aw $BASE)" "$(wslpath -aw $REMOTE)" \
@@ -85,5 +54,18 @@ function meldtool(){
   : ${BASE:=${3}}
   meldtool_wsl
 }
+
+# Simplify downstream ssh/git pass
+eval `keychain --eval id_rsa 2>/dev/null`
+
+# Tools
+source ~/.local/share/git-subrepo/.rc 2>/dev/null
+
+# Tmux functions!
+source ~/.dotfiles/tmux/tmux_functions.sh
+
+## Testing
+
+alias git-proxy="HTTPS_PROXY=socks5://127.0.0.1:1080 git"
 
 # ~/.bashrc

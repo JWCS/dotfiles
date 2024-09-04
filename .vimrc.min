@@ -1,26 +1,8 @@
-" Return to last edit position when opening files (You want this!)
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
-" Move between windows with control+h/j/k/l
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
-
-xnoremap p "_dP
+" .dotfiles/.vimrc.min
 
 "" Vim file management
 " Set to autoread when a file is changed from the outside
 set autoread
-" Strip trailing whitespace from file!
-fun! <SID>StripTrailingWhiteSpaces()
-	let l = line(".")
-	let c = col(".")
-	%s/\s\+$//e
-	call cursor(l, c)
-endfun
-autocmd BufWritePre * :call <SID>StripTrailingWhiteSpaces()
-
 set history=500 " Limit history
 let $LANG='en'
 set langmenu=en
@@ -36,12 +18,19 @@ set noswapfile
 set t_Co=256
 set background=dark
 " Enable filetype plugins
+filetype on
 filetype plugin on
 filetype indent on
+
 "" Vim interaction management
 " leader is ' ', escape insert mode is jj
 let mapleader = " "
 inoremap jj <ESC>
+"inoremap hh <ESC>
+"inoremap bb <ESC>
+"inoremap BB <ESC>
+"inoremap ww <ESC>
+"inoremap WW <ESC>
 "set mouse=a " Full mouse support?
 " wildmenu
 set wildmenu
@@ -64,6 +53,8 @@ set magic " Allows regex
 " Lines
 set nu
 set rnu
+" Toggle (line numbers in) gutter
+nnoremap <silent> <leader>n :set relativenumber! number!<cr>
 " Uncertain if like
 highlight LineNR ctermfg=LightRed
 set so=7 " Set # lines buffer to cursor for j/k moving
@@ -80,7 +71,7 @@ highlight ColorColumn ctermbg=darkgray
 set showmatch " Show matching brackets when cursor is over
 set mat=2 " How many tenths of sec to blink on matching brackets
 " Text editing
-set ts=2 sts=2 sw=2 " tabstop, shifttabwidth, shiftwidth
+set ts=8 sts=0 sw=2 " tabstop, shifttabwidth, shiftwidth
 set smarttab expandtab
 set ai si " autoindent, smartindent
 set wrap " Wrap lines
@@ -88,5 +79,43 @@ syntax enable " Enable syntax highlighting
 " Linebreak on 500 char
 set lbr
 set tw=500
+" Folding
+set foldmethod=syntax
+set foldlevel=2
 
 colorscheme desert
+" Redraw
+map <silent> <leader>l :redraw!<cr>
+
+"" Vim file management augroup
+" Strip trailing whitespace from file!
+fun! <SID>StripTrailingWhiteSpaces()
+	let l = line(".")
+	let c = col(".")
+	%s/\s\+$//e
+	call cursor(l, c)
+endfun
+
+augroup vimrc
+autocmd!
+autocmd BufWritePre * :call <SID>StripTrailingWhiteSpaces()
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup END
+
+"" Convenience functions
+" Move between windows with control+h/j/k/l
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+xnoremap p "_dP
+
+"" Specialty filetypes?
+augroup filetype_settings
+autocmd!
+autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
+autocmd FileType gitconfig set noexpandtab shiftwidth=8 softtabstop=0
+augroup END
+

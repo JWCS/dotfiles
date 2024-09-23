@@ -1,0 +1,61 @@
+#!/bin/bash
+# .dotfiles/.bashrc_features
+
+function _has_cmd() {
+  type $1 &>/dev/null
+}
+function _is_set() {
+  [[ -v $1 ]]
+}
+function _is_nonempty() {
+  [[ -n $1 ]]
+}
+
+# BRC_FEAT_KEYCHAINS="id_rsa"
+if _has_cmd keychain && _is_nonemtpy BRC_FEAT_KEYCHAINS; then
+  eval `keychain --eval $BRC_FEAT_KEYCHAINS 2>/dev/null`
+fi
+
+if [ -d ~/.local/share/git-subrepo ]; then
+  source ~/.local/share/git-subrepo/.rc 2>/dev/null
+fi
+
+if _has_cmd tmux; then
+  source ~/.dotfiles/tmux/tmux_functions.sh
+fi
+
+if _is_set BRC_FEAT_GIT_PROXY; then
+  alias git-proxy="HTTPS_PROXY=socks5://127.0.0.1:1080 git"
+fi
+
+if _has_cmd direnv; then
+  eval "$(direnv hook bash)"
+  alias tmux='direnv exec / tmux'
+fi
+
+if [ -d "$HOME/.pyenv" ]; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  export PATH="$PYENV_ROOT/bin:$PATH"
+  if _has_cmd pyenv; then
+    eval "$(pyenv init -)"
+    source $(pyenv root)/completions/pyenv.bash
+  fi
+fi
+
+if [ -d "$HOME/.nvm" ]; then
+  # nodejs version manager
+  export NVM_DIR="$HOME/.nvm"
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+fi
+
+if _has_cmd docker; then
+  docker-rm-created(){
+    docker ps --filter "status=created" | awk 'FNR>1{system("docker container rm "$1)}'
+  }
+
+
+fi
+
+# .bashrc_features
+

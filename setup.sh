@@ -8,16 +8,13 @@ mkdir -p ~/.local/share ~/.local/bin
 mv ~/.bashrc ~/.bashrc_orig
 
 cat <<EOF > ~/.bashrc
-#!/bin/bash
 # ~/.bashrc
 source ~/.bashrc_orig
 source ~/.dotfiles/.bashrc_common
 
 #BRC_FEAT_KEYCHAINS="id_rsa"
-#BRC_FEAT_GIT_PROXY
+#BRC_FEAT_GIT_PROXY=1
 source ~/.dotfiles/.bashrc_features
-
-## Testing
 
 EOF
 
@@ -34,15 +31,22 @@ git config --global include.path .dotfiles/.gitconfig
 #	sslVerify=false
 #	proxy="socks5://127.0.0.1:1080"
 
+# vim: toggle features w env vars
+cat <<EOF >> ~/.bashrc
 # vim
-cat <<EOF > ~/.vimrc
-" ~/.vimrc
-source ~/.dotfiles/.vimrc
-
+#VRC_FEAT_COPILOT=1
+#VRC_FEAT_COC=1
 
 EOF
-# TODO: vim-plug, and plugins
-# Atm, not using any "lightweight" and non-internet plugins...
+
+# This is to catch various things that add to .bashrc
+cat <<EOF >> ~/.bashrc
+
+## Testing
+
+# .bashrc
+
+EOF
 
 # setup.sh
 

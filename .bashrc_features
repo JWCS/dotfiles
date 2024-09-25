@@ -11,28 +11,25 @@ function _is_nonempty() {
   [[ -n $1 ]]
 }
 
-# BRC_FEAT_KEYCHAINS="id_rsa"
-if _has_cmd keychain && _is_nonemtpy BRC_FEAT_KEYCHAINS; then
-  eval `keychain --eval $BRC_FEAT_KEYCHAINS 2>/dev/null`
-fi
+## Auto-setup
 
+# subrepo
 if [ -d ~/.local/share/git-subrepo ]; then
   source ~/.local/share/git-subrepo/.rc 2>/dev/null
 fi
 
+# tmux
 if _has_cmd tmux; then
   source ~/.dotfiles/tmux/tmux_functions.sh
 fi
 
-if _is_set BRC_FEAT_GIT_PROXY; then
-  alias git-proxy="HTTPS_PROXY=socks5://127.0.0.1:1080 git"
-fi
-
+# direnv
 if _has_cmd direnv; then
   eval "$(direnv hook bash)"
   alias tmux='direnv exec / tmux'
 fi
 
+# pyenv
 if [ -d "$HOME/.pyenv" ]; then
   export PYENV_ROOT="$HOME/.pyenv"
   export PATH="$PYENV_ROOT/bin:$PATH"
@@ -42,6 +39,7 @@ if [ -d "$HOME/.pyenv" ]; then
   fi
 fi
 
+# node version manager
 if [ -d "$HOME/.nvm" ]; then
   # nodejs version manager
   export NVM_DIR="$HOME/.nvm"
@@ -49,12 +47,27 @@ if [ -d "$HOME/.nvm" ]; then
   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 fi
 
+# docker
+# this actually is moreso collection of docker gems?
 if _has_cmd docker; then
   docker-rm-created(){
     docker ps --filter "status=created" | awk 'FNR>1{system("docker container rm "$1)}'
   }
 
+fi
 
+
+## Explicit Features
+
+# BRC_FEAT_KEYCHAINS="id_rsa"
+if _has_cmd keychain && _is_nonemtpy BRC_FEAT_KEYCHAINS; then
+  # Simplify downstream ssh/git pass
+  eval `keychain --eval $BRC_FEAT_KEYCHAINS 2>/dev/null`
+fi
+
+# BRC_FEAT_GIT_PROXY=1
+if _is_set BRC_FEAT_GIT_PROXY; then
+  alias git-proxy="HTTPS_PROXY=socks5://127.0.0.1:1080 git"
 fi
 
 # .bashrc_features

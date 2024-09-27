@@ -8,6 +8,7 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
 endif
 
 call plug#begin()
+" Remember to add these feature flags to setup.sh and ~/.bashrc!
 
 if !(empty($VRC_FEAT_COPILOT))
   Plug 'github/copilot.vim'
@@ -15,6 +16,11 @@ endif
 
 if !(empty($VRC_FEAT_COC))
   Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+endif
+
+if !(empty($VRC_FEAT_CMAKE))
+  Plug 'ilyachur/cmake4vim'
+  Plug 'tpope/vim-dispatch'
 endif
 
 call plug#end()

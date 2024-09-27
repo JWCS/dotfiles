@@ -1,5 +1,8 @@
 #!/bin/bash
 # .dotfiles/setup.sh
+# Note: all configuration for everything is in the .bashrc;
+# which is why its the only file built here, instead of symlinked.
+# Everything else is auto-detected, or uses env var flags.
 
 # files tructure
 mkdir -p ~/.local/share ~/.local/bin
@@ -12,8 +15,8 @@ cat <<EOF > ~/.bashrc
 source ~/.bashrc_orig
 source ~/.dotfiles/.bashrc_common
 
-#BRC_FEAT_KEYCHAINS="id_rsa"
-#BRC_FEAT_GIT_PROXY=1
+#export BRC_FEAT_KEYCHAINS="id_rsa"
+#export BRC_FEAT_GIT_PROXY=1
 source ~/.dotfiles/.bashrc_features
 
 EOF
@@ -32,10 +35,12 @@ git config --global include.path .dotfiles/.gitconfig
 #	proxy="socks5://127.0.0.1:1080"
 
 # vim: toggle features w env vars
+ln -rs ~/.dotfiles/.vimrc ~/.vimrc
 cat <<EOF >> ~/.bashrc
 # vim
-#VRC_FEAT_COPILOT=1
-#VRC_FEAT_COC=1
+#export VRC_FEAT_COPILOT=1
+#export VRC_FEAT_COC=1
+#export VRC_FEAT_CMAKE=1
 
 EOF
 

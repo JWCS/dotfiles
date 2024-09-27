@@ -18,9 +18,7 @@ set noswapfile
 set t_Co=256
 set background=dark
 " Enable filetype plugins
-filetype on
-filetype plugin on
-filetype indent on
+filetype plugin indent on
 
 "" Vim interaction management
 " leader is ' ', escape insert mode is jj
@@ -71,7 +69,7 @@ highlight ColorColumn ctermbg=darkgray
 set showmatch " Show matching brackets when cursor is over
 set mat=2 " How many tenths of sec to blink on matching brackets
 " Text editing
-set ts=8 sts=0 sw=2 " tabstop, shifttabwidth, shiftwidth
+set ts=2 sts=2 sw=2 " tabstop, shifttabwidth, shiftwidth
 set smarttab expandtab
 set ai si " autoindent, smartindent
 set wrap " Wrap lines
@@ -114,8 +112,8 @@ xnoremap p "_dP
 
 "" Specialty filetypes?
 augroup filetype_settings
-autocmd!
-autocmd FileType make set noexpandtab shiftwidth=8 softtabstop=0
-autocmd FileType gitconfig set noexpandtab shiftwidth=8 softtabstop=0
+au!
+au FileType make        setl noet ts=8 sw=8 sts=0
+au FileType gitconfig   setl noet ts=8 sw=8 sts=0
 augroup END
 

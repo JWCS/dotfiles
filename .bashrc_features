@@ -60,7 +60,7 @@ fi
 ## Explicit Features
 
 # BRC_FEAT_KEYCHAINS="id_rsa"
-if _has_cmd keychain && _is_nonemtpy BRC_FEAT_KEYCHAINS; then
+if _has_cmd keychain && _is_nonempty BRC_FEAT_KEYCHAINS; then
   # Simplify downstream ssh/git pass
   eval `keychain --eval $BRC_FEAT_KEYCHAINS 2>/dev/null`
 fi

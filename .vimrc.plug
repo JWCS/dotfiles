@@ -1,11 +1,26 @@
 " ~/.dotfiles/.vimrc.plug
+" Changelog:
+" 2024-03-16: Init 'new' plugins conf; sep conf by kind, and import; new code complete
+" 2024-09-27: Wrap all plugins in env var flags
 
-" Install vim-plug
+"" .vimrc.old (2019) was heavily ycm based; the subset of non-plugins I heavily used
+" was extracted to .vimrc.min (aka, no-plugin vimrc, useful for remotes)
+" Because of this, and to keep things more clean than .vimrc.old, splitting
+" config into 'pure vim' and plugins; such is this file
+
+"" Plugins (first, to be overwritten)
+" Auto-getting vim-plug if not installed
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
   silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+
+"" Run PlugInstall if there are missing plugins
+"autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+"  \| PlugInstall --sync | source $MYVIMRC
+"\| endif
+" Disable atm, bc... kinda like more manual?
 
 call plug#begin()
 " Remember to add these feature flags to setup.sh and ~/.bashrc!

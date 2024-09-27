@@ -82,6 +82,7 @@ set foldmethod=syntax
 set foldlevel=2
 
 colorscheme desert
+
 " Redraw
 map <silent> <leader>l :redraw!<cr>
 
@@ -110,10 +111,11 @@ map <C-l> <C-W>l
 
 xnoremap p "_dP
 
-"" Specialty filetypes?
+"" Some lang-specif settings
 augroup filetype_settings
 au!
 au FileType make        setl noet ts=8 sw=8 sts=0
 au FileType gitconfig   setl noet ts=8 sw=8 sts=0
+au Filetype python      setl foldmethod=indent foldnestmax=2
 augroup END
 

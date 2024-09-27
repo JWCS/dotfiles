@@ -34,6 +34,18 @@ git config --global include.path .dotfiles/.gitconfig
 #	sslVerify=false
 #	proxy="socks5://127.0.0.1:1080"
 
+# .ssh/config
+cat <<EOF >> ~/.ssh/config
+HashKnownHosts yes
+HostKeyAlgorithms +ssh-rsa
+PubkeyAcceptedKeyTypes +ssh-rsa
+
+EOF
+#Host gitlab.corp.net
+#HostName gitlab.corp.net
+#User git
+#ProxyCommand nc -v -x 127.0.0.1:1080 %h %p
+
 # vim: toggle features w env vars
 ln -rs ~/.dotfiles/.vimrc ~/.vimrc
 cat <<EOF >> ~/.bashrc

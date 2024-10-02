@@ -116,6 +116,7 @@ augroup filetype_settings
 au!
 au FileType make        setl noet ts=8 sw=8 sts=0
 au FileType gitconfig   setl noet ts=8 sw=8 sts=0
+au BufRead,BufNewFile,BufReadPost .gitconfig.* setfiletype gitconfig
 au Filetype python      setl foldmethod=indent foldnestmax=2
 augroup END
 

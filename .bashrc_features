@@ -10,13 +10,12 @@ function _is_set() {
 function _is_nonempty() {
   [[ -n $1 ]]
 }
+function _mk_alias(){
+  rest="${@:2}"
+  alias $1="$rest"
+}
 
 ## Auto-setup
-
-# subrepo
-if [ -d ~/.local/share/git-subrepo ]; then
-  source ~/.local/share/git-subrepo/.rc 2>/dev/null
-fi
 
 # tmux
 if _has_cmd tmux; then
@@ -39,12 +38,40 @@ if [ -d "$HOME/.pyenv" ]; then
   fi
 fi
 
+# pipx
+if _has_cmd pipx; then
+  if ! _has_cmd register-python-argcomplete; then
+    pipx install argcomplete
+  fi
+  eval "$(register-python-argcomplete pipx)"
+fi
+
 # node version manager
 if [ -d "$HOME/.nvm" ]; then
   # nodejs version manager
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+fi
+
+# bash alias completion
+if [ -f ~/.bash_completion.d/complete_alias ]; then
+  # Alias completion
+  # https://unix.stackexchange.com/questions/4219/how-do-i-get-bash-completion-for-command-aliases
+  source ~/.bash_completion.d/complete_alias
+  function alias_nice(){
+    _mk_alias "$@"
+    complete -F _complete_alias $1
+  }
+else
+  function alias_nice(){
+    _mk_alias "$@"
+  }
+fi
+
+# subrepo
+if [ -d ~/.local/share/git-subrepo ]; then
+  source ~/.local/share/git-subrepo/.rc 2>/dev/null
 fi
 
 # docker
@@ -67,7 +94,7 @@ fi
 
 # BRC_FEAT_GIT_PROXY=1
 if _is_set BRC_FEAT_GIT_PROXY; then
-  alias git-proxy="HTTPS_PROXY=socks5://127.0.0.1:1080 git"
+  alias_nice git-proxy "HTTPS_PROXY=socks5://127.0.0.1:1080 git"
 fi
 
 # .bashrc_features

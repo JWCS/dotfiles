@@ -8,6 +8,7 @@
 [[ $- == *i* ]] && stty -ixon # Stops the Ctrl-S thing in vim # The weird first half is "inapprop ioctl for device stty", only interactive mode
 PATH=~/.local/bin:$PATH
 
+export HISTTIMEFORMAT="%F %T "
 # Eternal bash history.
 # ---------------------
 # Undocumented feature which sets the size to "unlimited".
@@ -48,6 +49,14 @@ cleardir () {
   ls -A | xargs rm -rf
 }
 
+# For safely adding path to path
+function addToPATH {
+  case ":$PATH:" in
+    *":$1:"*) :;; # already there
+    *) PATH="$1:$PATH";; # or PATH="$PATH:$1"
+  esac
+}
+
 # docker gems
 #alias docker-rmi-none="docker images -a | grep '<none>' | awk '{ print $3; }' | xargs docker rmi"
 function docker-rmi-none(){
@@ -61,9 +70,5 @@ function rm-orig(){
 function git-branch-prune(){
   git fetch -p && git branch -vv | cut -b3- | awk '/: gone]/{system("git branch -d "$1)}'
 }
-
-# Alias completion
-# https://unix.stackexchange.com/questions/4219/how-do-i-get-bash-completion-for-command-aliases
-source ~/.bash_completion.d/complete_alias
 
 

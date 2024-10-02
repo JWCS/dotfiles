@@ -1,0 +1,43 @@
+# ~/.dotfiles/.inputrc
+$include /etc/inputrc
+
+# Default usually, ensures pasting verbatium
+set enable-bracketed-paste on
+# Disable audio bell
+set bell-style visible
+
+# Autocomplete from history
+# https://superuser.com/a/1332850/
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+
+set completion-query-items 150
+set completion-ignore-case On
+set mark-symlinked-directories On
+# This truncates multiple completion options (like ls this_...) by their prefix; this is the trigger length
+set completion-prefix-display-length 3
+
+# vi mode:
+# https://wiki.archlinux.org/title/Readline
+
+# Change double-tab to single tab, to complete and/or list if ambiguous
+set show-all-if-unmodified on
+set show-all-if-ambiguous on
+
+# Color files by types
+# Note that this may cause completion text blink in some terminals (e.g. xterm).
+set colored-stats On
+# Append char to indicate type
+set visible-stats On
+# Mark symlinked directories
+set mark-symlinked-directories On
+# Color the common prefix
+set colored-completion-prefix On
+# Color the common prefix in menu-complete
+set menu-complete-display-prefix On
+
+# Disable the ^C to terminal when ^C
+set echo-control-characters off
+
+# Further: https://deut-erium.github.io/2024/01/28/inputrc.html
+

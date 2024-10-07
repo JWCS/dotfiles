@@ -17,6 +17,21 @@ function _mk_alias(){
 
 ## Auto-setup
 
+# bash alias completion
+if [ -f ~/.bash_completion.d/complete_alias ]; then
+  # Alias completion
+  # https://unix.stackexchange.com/questions/4219/how-do-i-get-bash-completion-for-command-aliases
+  source ~/.bash_completion.d/complete_alias
+  function alias_nice(){
+    _mk_alias "$@"
+    complete -F _complete_alias $1
+  }
+else
+  function alias_nice(){
+    _mk_alias "$@"
+  }
+fi
+
 # tmux
 if _has_cmd tmux; then
   source ~/.dotfiles/tmux/tmux_functions.sh
@@ -25,7 +40,7 @@ fi
 # direnv
 if _has_cmd direnv; then
   eval "$(direnv hook bash)"
-  alias tmux='direnv exec / tmux'
+  alias_nice tmux 'direnv exec / tmux'
 fi
 
 # pyenv
@@ -54,21 +69,6 @@ if [ -d "$HOME/.nvm" ]; then
   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 fi
 
-# bash alias completion
-if [ -f ~/.bash_completion.d/complete_alias ]; then
-  # Alias completion
-  # https://unix.stackexchange.com/questions/4219/how-do-i-get-bash-completion-for-command-aliases
-  source ~/.bash_completion.d/complete_alias
-  function alias_nice(){
-    _mk_alias "$@"
-    complete -F _complete_alias $1
-  }
-else
-  function alias_nice(){
-    _mk_alias "$@"
-  }
-fi
-
 # subrepo
 if [ -d ~/.local/share/git-subrepo ]; then
   source ~/.local/share/git-subrepo/.rc 2>/dev/null
@@ -83,6 +83,11 @@ if _has_cmd docker; then
 
 fi
 
+# tailscale alias
+if _has_cmd tailscale; then
+  source <(tailscale completion bash)
+  alias_nice ts 'tailscale'
+fi
 
 ## Explicit Features
 

@@ -39,6 +39,7 @@ ln -rs ~/.dotfiles/.tmux.conf ~/.tmux.conf
 function _gitconf_init(){
 ln -rs ~/.dotfiles/.gitignore_global ~/.gitignore_global
 cat <<EOF ~/.gitconfig
+# ~/.gitconfig
 [user]
 #	name = My Name
 #	email = my@email
@@ -56,8 +57,8 @@ EOF
 }
 
 function _sshconf_init(){
-# .ssh/config
 cat <<EOF >> ~/.ssh/config
+# .ssh/config
 HashKnownHosts yes
 HostKeyAlgorithms +ssh-rsa
 PubkeyAcceptedKeyTypes +ssh-rsa
@@ -102,7 +103,7 @@ _gitconf_init
 _sshconf_init
 _vimrc_init
 _bashrc_footer
-echo "Remember to setup .gitconfig and .ssh/config if corp pc"
+echo "Remember to setup .gitconfig, .ssh/config, and ca-certificate if corp pc"
 }
 
 # TODO: if not sourced then run main

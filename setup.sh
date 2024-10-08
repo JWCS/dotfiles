@@ -3,6 +3,7 @@
 # Note: all configuration for everything is in the .bashrc;
 # which is why its the only file built here, instead of symlinked.
 # Everything else is auto-detected, or uses env var flags.
+# Note: some files can harmlessly be ran again; this one, is bad
 
 # files structure
 function _mk_file_structure(){
@@ -11,11 +12,12 @@ mkdir -p ~/.local/share ~/.local/bin
 
 # inputrc
 function _ln_inputrc(){
-ln -rs ~/.dotfiles/.inputrc ~/.inputrc
+[ -f ~/.inputrc ] || ln -rs ~/.dotfiles/.inputrc ~/.inputrc
 }
 
 # bash
 function _bashrc_init(){
+[ -f ~/.bashrc_orig ] && { echo "ERROR: bashrc_orig already exists!"; return 1; }
 mv ~/.bashrc ~/.bashrc_orig
 cat <<EOF > ~/.bashrc
 # ~/.bashrc
@@ -31,13 +33,13 @@ EOF
 
 # tmux
 function _ln_tmux(){
-ln -rs ~/.dotfiles/.tmux.conf ~/.tmux.conf
+[ -f ~/.tmux.conf ] || ln -rs ~/.dotfiles/.tmux.conf ~/.tmux.conf
 # Note: this references tpm, which has to be installed as well...
 }
 
 # git
 function _gitconf_init(){
-ln -rs ~/.dotfiles/.gitignore_global ~/.gitignore_global
+[ -f ~/.gitignore_global ] || ln -rs ~/.dotfiles/.gitignore_global ~/.gitignore_global
 cat <<EOF ~/.gitconfig
 # ~/.gitconfig
 [user]
@@ -63,11 +65,12 @@ HashKnownHosts yes
 HostKeyAlgorithms +ssh-rsa
 PubkeyAcceptedKeyTypes +ssh-rsa
 
-EOF
 #Host gitlab.corp.net
 #HostName gitlab.corp.net
 #User git
 #ProxyCommand nc -v -x 127.0.0.1:1080 %h %p
+
+EOF
 }
 
 # vim: toggle features w env vars
@@ -95,19 +98,25 @@ EOF
 }
 
 function main(){
-_mk_file_structure
-_ln_inputrc
-_bashrc_init
-_ln_tmux
-_gitconf_init
-_sshconf_init
-_vimrc_init
-_bashrc_footer
+_mk_file_structure && \
+_ln_inputrc && \
+_bashrc_init && \
+_ln_tmux && \
+_gitconf_init && \
+_sshconf_init && \
+_vimrc_init && \
+_bashrc_footer && \
 echo "Remember to setup .gitconfig, .ssh/config, and ca-certificate if corp pc"
 }
 
-# TODO: if not sourced then run main
-main
+# Utilities
+# https://stackoverflow.com/questions/2683279/how-to-detect-if-a-script-is-being-sourced
+(return 0 2>/dev/null) && sourced=1 || sourced=0
+
+# If not sourced
+if [ "$sourced" -eq "0" ]; then
+  main
+fi
 
 # setup.sh
 

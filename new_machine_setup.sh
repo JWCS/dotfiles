@@ -12,12 +12,10 @@ sudo apt update
 man-db -y && sudo unminimize
 
 # setup apt
-sudo su
-apt install -y software-properties-common dialog ca-certificates bash-completion
-add-apt-repository -y ppa:apt-fast/stable
-apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y apt-fast
-exit
+sudo apt install -y software-properties-common dialog ca-certificates bash-completion
+sudo add-apt-repository -y ppa:apt-fast/stable
+sudo apt-get update
+DEBIAN_FRONTEND=noninteractive sudo apt-get install -y apt-fast
 # TODO: update mirrors by speed
 # https://askubuntu.com/a/719551/1060493
 # curl -s http://mirrors.ubuntu.com/mirrors.txt | xargs -n1 -I {} sh -c 'echo `curl -r 0-102400 -s -w %{speed_download} -o /dev/null {}/ls-lR.gz` {}' |sort -g -r |head -1| awk '{ print $2  }'

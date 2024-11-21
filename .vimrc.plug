@@ -38,6 +38,14 @@ if !(empty($VRC_FEAT_CMAKE))
   Plug 'tpope/vim-dispatch'
 endif
 
+" tpope plugins; got one, might as well get all
+if !(empty($VRC_FEAT_TP_STD))
+  Plug 'tpope/vim-repeat'
+  Plug 'tpope/vim-abolish'
+  Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-unimpaired'
+endif
+
 call plug#end()
 
 " Color schemes load at end

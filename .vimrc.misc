@@ -1,0 +1,11 @@
+
+" This converts all snake case to camelCase, keeping leading underscore, not touching words that start with a Cap
+function! ReCap()
+  silent! %s/\<\(_\+\)\(\w\+\)/\1$ \2/g " Split leading _, for clarity
+  let @/ = '\<\l\a\w*_\w*' " the search for valid words (new word, lowercase, 2nd char isn't _, and at least 1 under
+  let @q = 'ncrcN@q' " the crc is from tpope; n to next, run the converter, then recurse
+  normal! gg
+  normal! @q
+  silent! %s/_$ \(\w\+\)/_\1/g " Undo the sep leading under
+endfunction
+

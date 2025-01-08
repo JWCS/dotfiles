@@ -54,6 +54,10 @@ function install-subrepo(){
   fi
 }
 
+function install-meld(){
+  sudo apt-fast install -y meld dbus-x11 # for meld over ssh, see notes
+}
+
 function install-git-delta(){
   echo $FUNCNAME
   local ARCH VERSION REPO SHARE

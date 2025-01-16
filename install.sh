@@ -102,6 +102,16 @@ function install-pipx(){
   python3 -m pipx ensurepath ; }
 }
 
+function install-pyenv(){
+  # Note: these were taken from the docs
+  sudo apt-fast update
+  sudo apt-fast install -y \
+    build-essential libssl-dev zlib1g-dev \
+    libbz2-dev libreadline-dev libsqlite3-dev curl git \
+    libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev || return
+  curl -fsSL https://pyenv.run | bash
+}
+
 function install-common-apt(){
   echo $FUNCNAME
   _has_cmd ag || sudo apt-fast install -y silversearcher-ag

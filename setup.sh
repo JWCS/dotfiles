@@ -40,7 +40,7 @@ function _ln_tmux(){
 # git
 function _gitconf_init(){
 [ -f ~/.gitignore_global ] || ln -rs ~/.dotfiles/.gitignore_global ~/.gitignore_global
-cat <<EOF ~/.gitconfig
+cat <<EOF > ~/.gitconfig
 # ~/.gitconfig
 [user]
 #	name = My Name
@@ -59,6 +59,7 @@ EOF
 }
 
 function _sshconf_init(){
+mkdir -p ~/.ssh
 cat <<EOF >> ~/.ssh/config
 # .ssh/config
 HashKnownHosts yes

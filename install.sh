@@ -11,6 +11,10 @@ function _has_pkg(){
   dpkg -s $1 &>/dev/null
 }
 
+function _has_ppa(){
+  grep -qr "${1:?}" /etc/apt/sources.list*
+}
+
 function _mkcd(){
   mkdir -p $1 && cd $1
 }
@@ -29,22 +33,52 @@ function _gh_latest_version(){
   | awk -F\" '/"tag_name":/{print $(NF-1)}' | sed -E 's/v(.*)/\1/g'
 }
 
+function _check_apt-fast(){
+  _has_cmd apt-fast || install-apt-fast
+}
+
+function _check-git(){
+  install-git
+}
+
 function _install_gh_deb(){(
   local REPO=${1:?}
   local DL_PATH=${2:?}
   local DL_DEB=${DL_PATH##*/}
   _mkcd ~/Downloads
-  [ -f $DL_DEB ] && exit 0
-  curl -OL https://github.com/$REPO/releases/download/$DL_PATH || exit $?
+  _check_apt-fast || return $?
+  [ -f $DL_DEB ] && return 1
+  curl -OL https://github.com/$REPO/releases/download/$DL_PATH || return $?
   sudo apt-fast install ./$DL_DEB
 )}
 
+function install-apt-fast(){
+  echo $FUNCNAME
+  _has_cmd apt-fast || {
+    sudo add-apt-repository -y ppa:apt-fast/stable || return $?
+    sudo apt-get update || return $?
+    sudo apt-get -y install apt-fast
+  }
+}
+
+function install-git(){
+  _check_apt-fast || return $?
+  PPA="git-core/ppa"
+  _has_ppa $PPA && return
+  echo $FUNCNAME
+  sudo add-apt-repository -y ppa:${PPA:?} || return $?
+  sudo apt-fast update || return $?
+  sudo apt-fast -y install git git-lfs || return $?
+}
+
 function install-keychain(){
   echo $FUNCNAME
+  _check_apt-fast || return $?
   _has_cmd keychain || sudo apt-fast install -y keychain
 }
 
 function install-subrepo(){
+  _check-git
   echo $FUNCNAME
   local REPO='~/.local/share/git-subrepo'
   if [ -d $REPO ]; then
@@ -55,6 +89,7 @@ function install-subrepo(){
 }
 
 function install-meld(){
+  _check_apt-fast || return $?
   sudo apt-fast install -y meld dbus-x11 # for meld over ssh, see notes
 }
 
@@ -83,18 +118,23 @@ function install-bat(){
 
 function install-tmux(){
   echo $FUNCNAME
+  _check_apt-fast || return $?
   _has_cmd tmux || sudo apt-fast install -y tmux
 }
 
 function install-vim(){
   echo $FUNCNAME
-  grep -qr 'jonathonf/vim' /etc/apt/sources.list* \
-  || { sudo add-apt-repository -y ppa:jonathonf/vim && sudo apt-fast update; }
+  _check_apt-fast || return $?
+# Note: jonathon passed away; this is now stale, and 2025-01 there's no replacement yet...
+#  PPA='jonathonf/vim'
+#  _has_ppa $PPA \
+#  || { sudo add-apt-repository -y ppa:${PPA:?} && sudo apt-fast update; } || return $?
   _has_pkg vim-gtk3 || sudo apt-fast install -y vim-gtk3
 }
 
 function install-pipx(){
   echo $FUNCNAME
+  _check_apt-fast || return $?
   # System python is installed exclusively for installing pipx
   _has_cmd pipx || { \
   sudo apt-fast install -y python3-pip && \
@@ -104,6 +144,8 @@ function install-pipx(){
 
 function install-pyenv(){
   # Note: these were taken from the docs
+  _check_apt-fast || return $?
+  _check-git || return $?
   sudo apt-fast update
   sudo apt-fast install -y \
     build-essential libssl-dev zlib1g-dev \
@@ -114,6 +156,7 @@ function install-pyenv(){
 
 function install-common-apt(){
   echo $FUNCNAME
+  _check_apt-fast || return $?
   _has_cmd ag || sudo apt-fast install -y silversearcher-ag
 }
 
@@ -127,6 +170,7 @@ function install-bash-alias-completion(){
 
 function install-docker(){
   echo $FUNCNAME
+  _check_apt-fast || return $?
   _has_cmd docker && docker version &>/dev/null && return
   # Add Docker's official GPG key:
   sudo install -m 0755 -d /etc/apt/keyrings

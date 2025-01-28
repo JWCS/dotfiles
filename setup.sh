@@ -101,6 +101,7 @@ EOF
 
 function main(){
 _mk_file_structure && \
+touch ~/.sudo_as_admin_successful && \
 _ln_inputrc && \
 _bashrc_init && \
 _ln_tmux && \

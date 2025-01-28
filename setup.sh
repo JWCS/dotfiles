@@ -48,6 +48,7 @@ cat <<EOF > ~/.gitconfig
 [include]
 	path = .dotfiles/.gitconfig
 	#path = .dotfiles/.gitconfig.delta
+
 # git-proxy:
 #[http]
 #	sslVerify=true

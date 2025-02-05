@@ -102,5 +102,12 @@ if _is_set BRC_FEAT_GIT_PROXY; then
   alias_nice git-proxy "HTTPS_PROXY=socks5://127.0.0.1:1080 git"
 fi
 
+# BRC_FEAT_WSL=1
+if _is_set BRC_FEAT_WSL; then
+  if [ -f "/mnt/c/Program Files/Meld/Meld.exe" ] && ! [ -f /usr/local/bin/meld ]; then
+    sudo ln -s /mnt/c/Program\ Files/Meld/Meld.exe /usr/local/bin/meld
+  fi
+fi
+
 # .bashrc_features
 

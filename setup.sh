@@ -26,6 +26,7 @@ source ~/.dotfiles/.bashrc_common
 
 #export BRC_FEAT_KEYCHAINS="id_rsa"
 #export BRC_FEAT_GIT_PROXY=1
+#export BRC_FEAT_WSL=1
 source ~/.dotfiles/.bashrc_features
 
 EOF
@@ -48,6 +49,7 @@ cat <<EOF > ~/.gitconfig
 [include]
 	path = .dotfiles/.gitconfig
 	#path = .dotfiles/.gitconfig.delta
+  #path = .dotfiles/wsl2/.gitconfig
 
 # git-proxy:
 #[http]

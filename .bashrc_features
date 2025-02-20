@@ -61,6 +61,14 @@ if _has_cmd pipx; then
   eval "$(register-python-argcomplete pipx)"
 fi
 
+# uv
+if _has_cmd uv; then
+  eval "$(uv generate-shell-completion bash)"
+fi
+if _has_cmd uvx; then
+  eval "$(uvx --generate-shell-completion bash)"
+fi
+
 # node version manager
 if [ -d "$HOME/.nvm" ]; then
   # nodejs version manager

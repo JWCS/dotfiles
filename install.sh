@@ -154,6 +154,10 @@ function install-pyenv(){
   curl -fsSL https://pyenv.run | bash
 }
 
+function install-uv(){
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+}
+
 function install-common-apt(){
   echo $FUNCNAME
   _check_apt-fast || return $?
@@ -172,6 +176,9 @@ function install-docker(){
   echo $FUNCNAME
   _check_apt-fast || return $?
   _has_cmd docker && docker version &>/dev/null && return
+  if ! [ -f /etc/docker/daemon.json ]; then
+    read -p "Installing docker: setup custom /etc/docker/daemon.json now, if different data-root" -n1 -s
+  fi
   # Add Docker's official GPG key:
   sudo install -m 0755 -d /etc/apt/keyrings
   sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc || return $?

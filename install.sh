@@ -161,7 +161,9 @@ function install-uv(){
 function install-common-apt(){
   echo $FUNCNAME
   _check_apt-fast || return $?
-  _has_cmd ag || sudo apt-fast install -y silversearcher-ag
+  _has_cmd ag || sudo apt-fast install -y silversearcher-ag || return $?
+  _has_cmd jq || sudo apt-fast install -y jq || return $?
+  _has_cmd rsync || sudo apt-fast install -y rsync || return $?
 }
 
 function install-bash-alias-completion(){

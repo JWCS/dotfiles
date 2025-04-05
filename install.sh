@@ -45,10 +45,9 @@ function _install_gh_deb(){(
   local REPO=${1:?}
   local DL_PATH=${2:?}
   local DL_DEB=${DL_PATH##*/}
-  _mkcd ~/Downloads
+  _mkcd /tmp/Downloads
   _check_apt-fast || return $?
-  [ -f $DL_DEB ] && return 1
-  curl -OL https://github.com/$REPO/releases/download/$DL_PATH || return $?
+  [ -f $DL_DEB ] || curl -OL https://github.com/$REPO/releases/download/$DL_PATH || return $?
   sudo apt-fast install ./$DL_DEB
 )}
 
@@ -101,7 +100,7 @@ function install-git-delta(){
   VERSION=$(_gh_latest_version $REPO) || return $?
   SHARE='~/.local/share/delta/'
   _install_gh_deb $REPO "${VERSION}/git-delta_${VERSION}_${ARCH}.deb" || return $?
-  [ -f $SHARE/themes.gitconfig ] && return
+  [ -f $SHARE/themes.gitconfig ] || return
   (
   _mkcd $SHARE
   curl -sLO https://github.com/dandavison/delta/raw/refs/heads/main/themes.gitconfig

@@ -44,6 +44,8 @@ if !(empty($VRC_FEAT_TP_STD))
   Plug 'tpope/vim-abolish'
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-unimpaired'
+  Plug 'tpope/vim-fugitive'
+  Plug 'tpope/vim-obsession' " For tmux session restore
 endif
 
 call plug#end()

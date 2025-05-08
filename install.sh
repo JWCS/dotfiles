@@ -132,6 +132,17 @@ function install-vim(){
   _has_pkg vim-gtk3 || sudo apt-fast install -y vim-gtk3
 }
 
+function install-glow(){
+  # https://github.com/charmbracelet/glow
+  echo $FUNCNAME
+  _check_apt-fast || return $?
+  # Debian/Ubuntu
+  sudo mkdir -p /etc/apt/keyrings
+  curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg || return $?
+  echo "deb [signed-by=/etc/apt/keyrings/charm.gpg] https://repo.charm.sh/apt/ * *" | sudo tee /etc/apt/sources.list.d/charm.list || return $?
+  sudo apt-fast update && sudo apt-fast install -y glow
+}
+
 function install-pipx(){
   echo $FUNCNAME
   _check_apt-fast || return $?

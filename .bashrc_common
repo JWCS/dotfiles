@@ -25,6 +25,10 @@ export HISTFILE=~/.bash_eternal_history
 # http://superuser.com/questions/20900/bash-history-loss
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
+function _has_cmd() {
+  type $1 &>/dev/null
+}
+
 # PS1 Mod
 parse_git_repo() {
   basename -s .git `git config --get remote.origin.url` 2> /dev/null
@@ -71,4 +75,19 @@ function git-branch-prune(){
   git fetch -p && git branch -vv | cut -b3- | awk '/: gone]/{system("git branch -d "$1)}'
 }
 
+# general
+function sed-all(){
+  local from to path
+  from=${1:?}
+  to=${2:?}
+  path=${3:-./}
+  if _has_cmd ag; then
+    ag -lQ ${from:?} -- ${path:?} \
+    | xargs -I{} sed -i "s/${from:?}/${to:?}/g" {}
+  elif _has_cmd rg; then
+    rg -lF ${from:?} -- ${path:?} \
+    | xargs -I{} sed -i "s/${from:?}/${to:?}/g" {}
+  else echo "ag or rg not installed!" >&2; return 1;
+  fi
+}
 

@@ -104,6 +104,11 @@ if _has_cmd tailscale; then
   alias_nice ts 'tailscale'
 fi
 
+# glow
+if _has_cmd glow; then
+  source <(glow completion bash)
+fi
+
 ## Explicit Features
 
 # BRC_FEAT_KEYCHAINS="id_rsa"

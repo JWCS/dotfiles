@@ -86,6 +86,7 @@ cat <<EOF >> ~/.bashrc
 #export VRC_FEAT_COC=1
 #export VRC_FEAT_CMAKE=1
 #export VRC_FEAT_TP_STD=1
+#export VRC_LANG_MD=1
 
 EOF
 }

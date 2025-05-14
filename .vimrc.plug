@@ -48,6 +48,11 @@ if !(empty($VRC_FEAT_TP_STD))
   Plug 'tpope/vim-obsession' " For tmux session restore
 endif
 
+if !(empty($VRC_LANG_MD))
+  Plug 'godlygeek/tabular'
+  Plug 'preservim/vim-markdown'
+endif
+
 call plug#end()
 
 " Color schemes load at end

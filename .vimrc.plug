@@ -53,6 +53,8 @@ if !(empty($VRC_LANG_MD))
   Plug 'preservim/vim-markdown'
 endif
 
+Plug 'LunarWatcher/auto-pairs'
+
 call plug#end()
 
 " Color schemes load at end

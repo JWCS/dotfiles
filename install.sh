@@ -27,6 +27,20 @@ function _dist_arch(){
   esac
 }
 
+#https://stackoverflow.com/a/37939589/
+function _version_normalize(){
+  echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'
+}
+
+function _version_cmp(){
+  [ $(_version_normalize "${1:?}") -ge $(_version_normalize "${2:?}") ]
+}
+
+function _min_ub_ver(){
+  _version_cmp $(lsb_release -rs) ${1:?}
+}
+
+# Always strips leading v, because easier to add it back than to remove it
 function _gh_latest_version(){
   # Where $1 is owner/repo
   curl -sL "https://api.github.com/repos/$1/releases/latest" \
@@ -49,6 +63,16 @@ function _install_gh_deb(){(
   _check_apt-fast || return $?
   [ -f $DL_DEB ] || curl -OL https://github.com/$REPO/releases/download/$DL_PATH || return $?
   sudo apt-fast install ./$DL_DEB
+)}
+
+# REPO DL_PATH [TAR ARGS...]
+function _install_gh_tgz(){(
+  local REPO=${1:?} ; shift
+  local DL_PATH=${1:?} ; shift
+  local DL_TGZ=${DL_PATH##*/}
+  _mkcd /tmp/Downloads
+  [ -f ${DL_TGZ:?} ] || curl -OfL https://github.com/$REPO/releases/download/$DL_PATH || return $?
+  sudo tar xvzf ${DL_TGZ:?} -C /usr/local/bin/ "$@" || return $?
 )}
 
 function install-apt-fast(){
@@ -74,6 +98,32 @@ function install-keychain(){
   echo $FUNCNAME
   _check_apt-fast || return $?
   _has_cmd keychain || sudo apt-fast install -y keychain
+}
+
+function install-age(){
+  echo $FUNCNAME
+  _check_apt-fast || return $?
+  _has_cmd age && return
+  if _min_ub_ver '22.04'; then
+    sudo apt-fast install -y age
+  else
+    local ARCH VERSION REPO
+    REPO="FiloSottile/age"
+    ARCH=$(_dist_arch) || return $?
+    VERSION=$(_gh_latest_version $REPO) || return $?
+    _install_gh_tgz $REPO "v${VERSION}/age-v${VERSION}-linux-${ARCH}.tar.gz" \
+      --wildcards 'age/age*' --strip-components 1
+  fi
+}
+
+function install-sops(){
+  install-age || return $?
+  echo $FUNCNAME
+  local ARCH VERSION REPO
+  REPO="getsops/sops"
+  ARCH=$(_dist_arch) || return $?
+  VERSION=$(_gh_latest_version $REPO) || return $?
+  _install_gh_deb $REPO "v${VERSION}/sops_${VERSION}_${ARCH}.deb"
 }
 
 function install-subrepo(){

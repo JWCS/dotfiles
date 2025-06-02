@@ -41,6 +41,7 @@ function _ln_tmux(){
 # git
 function _gitconf_init(){
 [ -f ~/.gitignore_global ] || ln -rs ~/.dotfiles/.gitignore_global ~/.gitignore_global
+[ -f ~/.gitattributes_global ] || ln -rs ~/.dotfiles/.gitattributes_global ~/.gitattributes_global
 cat <<EOF > ~/.gitconfig
 # ~/.gitconfig
 [user]

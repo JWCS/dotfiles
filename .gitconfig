@@ -9,6 +9,7 @@
 # Common
 [core]
 	excludesfile = ~/.gitignore_global
+	attributesfile = ~/.gitattributes_global
 	editor = vim
 	whitespace = cr-at-eol # Ignore ^M in diffs?
 [init]
@@ -23,6 +24,8 @@
 	# Choose one; for wsl, include.path=.dotfiles/ws2/.gitconfig to override
 	cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
 	#cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
+[diff "sopsdiffer"]
+	textconv = "sops decrypt"
 [alias]
 	lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 [alias]

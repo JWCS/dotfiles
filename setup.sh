@@ -104,7 +104,7 @@ cat <<EOF >> ~/.bashrc
 EOF
 }
 
-function main(){
+function setup(){
 _mk_file_structure && \
 touch ~/.sudo_as_admin_successful && \
 _ln_inputrc && \
@@ -123,7 +123,7 @@ echo "Remember to setup .gitconfig, .ssh/config, and ca-certificate if corp pc"
 
 # If not sourced
 if [ "$sourced" -eq "0" ]; then
-  main
+  setup
 fi
 
 # setup.sh

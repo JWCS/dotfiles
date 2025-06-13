@@ -1,35 +1,15 @@
 #!/bin/bash
 # .dotfiles/.bashrc_features
 
-function _has_cmd() {
-  type $1 &>/dev/null
-}
-function _is_set() {
-  [[ -v $1 ]]
-}
-function _is_nonempty() {
-  [[ -n $1 ]]
-}
-function _mk_alias(){
-  rest="${@:2}"
-  alias $1="$rest"
-}
+# _has_cmd, _is_set, _is_nonempty, _mk_alias, alias_nice
+source ~/.dotfiles/bash/util.sh
 
 ## Auto-setup
+source ~/.dotfiles/git/git_functions.sh
 
-# bash alias completion
-if [ -f ~/.bash_completion.d/complete_alias ]; then
-  # Alias completion
-  # https://unix.stackexchange.com/questions/4219/how-do-i-get-bash-completion-for-command-aliases
-  source ~/.bash_completion.d/complete_alias
-  function alias_nice(){
-    _mk_alias "$@"
-    complete -F _complete_alias $1
-  }
-else
-  function alias_nice(){
-    _mk_alias "$@"
-  }
+# docker
+if _has_cmd docker; then
+  source ~/.dotfiles/docker/docker_functions.sh
 fi
 
 # tmux
@@ -82,22 +62,6 @@ if [ -d ~/.local/share/git-subrepo ]; then
   source ~/.local/share/git-subrepo/.rc 2>/dev/null
 fi
 
-# docker
-# this actually is moreso collection of docker gems?
-if _has_cmd docker; then
-  docker-rm-created(){
-    docker ps --filter "status=created" | awk 'FNR>1{system("docker container rm "$1)}'
-  }
-  # https://stackoverflow.com/a/73108928/
-  docker-size(){
-    _has_cmd jq || sudo apt-fast install -y jq || return $?
-    docker manifest inspect -v "$1" \
-    | jq -c 'if type == "array" then .[] else . end' \
-    | jq -r '[ ( .Descriptor.platform | [ .os, .architecture, .variant, ."os.version" ] | del(..|nulls) | join("/") ), ( [ ( .OCIManifest // .SchemaV2Manifest ).layers[].size ] | add ) ] | join(" ")' \
-    | numfmt --to iec --format '%.2f' --field 2 | sort | column -t ;
-  }
-fi
-
 # tailscale alias
 if _has_cmd tailscale; then
   source <(tailscale completion bash)
@@ -108,6 +72,12 @@ fi
 if _has_cmd glow; then
   source <(glow completion bash)
 fi
+
+# legacy / todo: cuda, opam, ros
+# ros2:
+#buildless (){
+#  unbuffer colcon build $@ 3>&1 1>&2 2>&3 3>&- | less -R
+#}
 
 ## Explicit Features
 
@@ -127,6 +97,21 @@ if _is_set BRC_FEAT_WSL; then
   if [ -f "/mnt/c/Program Files/Meld/Meld.exe" ] && ! [ -f /usr/local/bin/meld ]; then
     sudo ln -s /mnt/c/Program\ Files/Meld/Meld.exe /usr/local/bin/meld
   fi
+  function meldtool_wsl(){
+    meld --auto-merge \
+      "$(wslpath -aw $LOCAL)" "$(wslpath -aw $BASE)" "$(wslpath -aw $REMOTE)" \
+      --output "$(wslpath -aw $MERGED)" \
+      --label=Local --label=Base --label=Remote \
+      --diff "$(wslpath -aw $BASE)" "$(wslpath -aw $LOCAL)" \
+      --diff "$(wslpath -aw $BASE)" "$(wslpath -aw $REMOTE)"
+  }
+  function meldtool(){
+    : ${LOCAL:=${1:?}}
+    : ${REMOTE:=${2:?}}
+    : ${MERGED:=${3:?}}
+    : ${BASE:=${3}}
+    meldtool_wsl
+  }
 fi
 
 # .bashrc_features

@@ -1,0 +1,33 @@
+# .gitconfig (common global)
+# Usage: in .gitconfig (top), add the following
+#[user]
+#	name = Name
+#	email = Relevant Email
+#[include]
+#	path=.dotfiles/.gitconfig
+
+# Common
+[core]
+	excludesfile = ~/.gitignore_global
+	attributesfile = ~/.gitattributes_global
+	editor = vim
+	whitespace = cr-at-eol # Ignore ^M in diffs?
+[init]
+	defaultBranch = master
+[push]
+	default = simple
+[fetch]
+	prune = true
+[merge]
+	tool = meld
+[mergetool "meld"]
+	# Choose one; for wsl, include.path=.dotfiles/ws2/.gitconfig to override
+	cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
+	#cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
+[diff "sopsdiffer"]
+	textconv = "sops decrypt"
+[rerere]
+	enabled = true
+	autoupdate = true
+[include]
+	path=~/.dotfiles/git/.gitconfig.alias

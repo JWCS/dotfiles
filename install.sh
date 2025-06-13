@@ -148,7 +148,7 @@ function install-git-delta(){
   REPO="dandavison/delta"
   ARCH=$(_dist_arch) || return $?
   VERSION=$(_gh_latest_version $REPO) || return $?
-  SHARE='~/.local/share/delta/'
+  SHARE=~/.local/share/delta/
   _install_gh_deb $REPO "${VERSION}/git-delta_${VERSION}_${ARCH}.deb" || return $?
   [ -f $SHARE/themes.gitconfig ] || return
   (

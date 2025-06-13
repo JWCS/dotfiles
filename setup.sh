@@ -40,17 +40,17 @@ function _ln_tmux(){
 
 # git
 function _gitconf_init(){
-[ -f ~/.gitignore_global ] || ln -rs ~/.dotfiles/.gitignore_global ~/.gitignore_global
-[ -f ~/.gitattributes_global ] || ln -rs ~/.dotfiles/.gitattributes_global ~/.gitattributes_global
+[ -f ~/.gitignore_global ] || ln -rs ~/.dotfiles/git/.gitignore_global ~/.gitignore_global
+[ -f ~/.gitattributes_global ] || ln -rs ~/.dotfiles/git/.gitattributes_global ~/.gitattributes_global
 cat <<EOF > ~/.gitconfig
 # ~/.gitconfig
 [user]
 #	name = My Name
 #	email = my@email
 [include]
-	path = .dotfiles/.gitconfig
-	#path = .dotfiles/.gitconfig.delta
-  #path = .dotfiles/wsl2/.gitconfig
+	path = ~/.dotfiles/git/.gitconfig
+	#path = ~/.dotfiles/git/.gitconfig.delta
+  #path = ~/.dotfiles/wsl2/.gitconfig
 
 # git-proxy:
 #[http]

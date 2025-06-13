@@ -1,12 +1,12 @@
-# ~/.bashrc
-# LAST_CHANGED 2024-09-04
-# Note: this is pushback against the .bashrc being a collection of random stuff,
-# without being sourceable for common, expected things.
-# This still contains gems... but bash specific, or doesn't do anything if not installed
+# ~/.dotfiles/.bashrc_common
+# This sets up environment shell stuff, common to shell instance behavior
+# It also sources "common utils", but other functions / extensions are in .bashrc_features
 
 # Custom adds
 [[ $- == *i* ]] && stty -ixon # Stops the Ctrl-S thing in vim # The weird first half is "inapprop ioctl for device stty", only interactive mode
 PATH=~/.local/bin:$PATH
+
+source ~/.dotfiles/bash/util.sh
 
 export HISTTIMEFORMAT="%F %T "
 # Eternal bash history.
@@ -25,10 +25,7 @@ export HISTFILE=~/.bash_eternal_history
 # http://superuser.com/questions/20900/bash-history-loss
 PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
-function _has_cmd() {
-  type $1 &>/dev/null
-}
-
+# TODO: modernize ps1's; the rest of the dotfiles are cleaner
 # PS1 Mod
 parse_git_repo() {
   basename -s .git `git config --get remote.origin.url` 2> /dev/null
@@ -48,51 +45,4 @@ show_virtual_env() {
 PS1='$(show_virtual_env)'$PS1
 PS1=$PS1'\n> '
 
-# bash gems
-cleardir () {
-  ls -A | xargs rm -rf
-}
-
-# For safely adding path to path
-function addToPATH {
-  case ":$PATH:" in
-    *":$1:"*) :;; # already there
-    *) PATH="$1:$PATH";; # or PATH="$PATH:$1"
-  esac
-}
-
-# docker gems
-#alias docker-rmi-none="docker images -a | grep '<none>' | awk '{ print $3; }' | xargs docker rmi"
-function docker-rmi-none(){
-  docker images -a | awk '/<none>/{system("docker rmi "$3)}'
-}
-
-# git gems
-function rm-orig(){
-  find ${1:-.} -name '*.orig' -exec rm {} \;
-}
-function git-branch-prune(){
-  git fetch -p && git branch -vv | cut -b3- | awk '/: gone]/{system("git branch -d "$1)}'
-}
-function git-diff-sort(){
-git diff --numstat $@ \
-| awk '{print ($1+$2)"\t"$3}' | sort -k1 -nr | cut -f2 \
-| git diff -O/dev/stdin $@
-}
-
 # general
-function sed-all(){
-  local from to path
-  from=${1:?}
-  to=${2:?}
-  path=${3:-./}
-  if _has_cmd ag; then
-    ag -lQ ${from:?} -- ${path:?} \
-    | xargs -I{} sed -i "s/${from:?}/${to:?}/g" {}
-  elif _has_cmd rg; then
-    rg -lF ${from:?} -- ${path:?} \
-    | xargs -I{} sed -i "s/${from:?}/${to:?}/g" {}
-  else echo "ag or rg not installed!" >&2; return 1;
-  fi
-}
-

@@ -168,7 +168,7 @@ function install-bat(){
 function install-tmux(){
   echo $FUNCNAME
   _check_apt-fast || return $?
-  _has_cmd tmux || sudo apt-fast install -y tmux
+  _has_cmd tmux || sudo apt-fast install -y tmux xclip
 }
 
 function install-vim(){

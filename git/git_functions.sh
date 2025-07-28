@@ -17,3 +17,25 @@ git diff --numstat $@ \
 | git diff -O/dev/stdin $@
 }
 
+# TODO: add to git-alias?
+# TODO: add -n support... somehow minimal parsing?
+# https://stackoverflow.com/a/14200660/
+_GIT_NEXT_ORIGIN=''
+function git-next(){
+  local orig next num_
+  orig=${1:-${_GIT_NEXT_ORIGIN:?}}
+  next=$(git rev-list --first-parent --topo-order HEAD.."${orig:?}" | tail -1)
+  num_=$(git rev-list --first-parent --topo-order HEAD.."${orig:?}" | wc -l)
+  if (( num_ <= 1 )); then git checkout ${orig:?} ; return $? ; fi
+  git checkout ${next:?}
+  >&2 echo "HEAD is $((${num_:?}-1)) commits from '${orig:?}'"
+  git lg -n$((${num_:?}+2)) ${orig:?}
+}
+function git-prev(){
+  if [ -z "${_GIT_NEXT_ORIGIN?}" ]; then _GIT_NEXT_ORIGIN="$(git branch --show-current)" ; fi
+  local orig
+  orig=$(git rev-parse HEAD)
+  git -c advice.detachedHead=false checkout HEAD~${1:-1}
+  git lg -n$((3+${1:-0})) ${orig:?}
+}
+

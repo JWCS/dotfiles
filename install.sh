@@ -239,7 +239,7 @@ function install-docker(){
   _check_apt-fast || return $?
   _has_cmd docker && docker version &>/dev/null && return
   if ! [ -f /etc/docker/daemon.json ]; then
-    read -p "Installing docker: setup custom /etc/docker/daemon.json now, if different data-root" -n1 -s
+    read -p "Installing docker: setup custom /etc/docker/daemon.json now, if different data-root\n" -n1 -s
   fi
   # Add Docker's official GPG key:
   sudo install -m 0755 -d /etc/apt/keyrings
@@ -248,10 +248,11 @@ function install-docker(){
   # Add the repository to Apt sources:
   echo \
     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-    $(. /etc/os-release && echo "$UBUNTU_CODENAME") stable" | \
+    $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null || return $?
   sudo apt-fast update
 
+  sudo apt-fast remove docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc
   sudo apt-fast install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin tini || return $?
   # skopeo not found?
   getent group docker &>/dev/null || sudo groupadd docker

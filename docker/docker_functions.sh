@@ -6,6 +6,7 @@ source ~/.dotfiles/bash/util.sh
 #alias docker-rmi-none="docker images -a | grep '<none>' | awk '{ print $3; }' | xargs docker rmi"
 function docker-rmi-none(){
   docker images -a | awk '/<none>/{system("docker rmi "$3)}'
+  docker buildx prune -af --filter "until=24h"
 }
 
 docker-rm-created(){

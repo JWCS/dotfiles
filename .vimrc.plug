@@ -38,7 +38,8 @@ if !(empty($VRC_FEAT_CMAKE))
   Plug 'tpope/vim-dispatch'
 endif
 
-" tpope plugins; got one, might as well get all
+" tpope plugins; got one, might as well get all.
+" Under flag, because you have to know them to use them
 if !(empty($VRC_FEAT_TP_STD))
   Plug 'tpope/vim-abolish'
   Plug 'tpope/vim-surround'
@@ -59,6 +60,8 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-obsession' " For tmux session restore
 Plug 'tpope/vim-repeat'
 Plug 'LunarWatcher/auto-pairs'
+Plug 'farmergreg/vim-lastplace'
+Plug 'tpope/vim-obsession' " For tmux session restore
 
 call plug#end()
 

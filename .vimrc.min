@@ -102,6 +102,15 @@ autocmd BufWritePre * :call <SID>StripTrailingWhiteSpaces()
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 augroup END
 
+augroup lang_specif
+autocmd!
+if !(empty($VRC_LANG_SH))
+  autocmd Filetype sh nnoremap <silent> <leader>c :ShellCheck! -x<cr><cr>
+  " :if !empty(filter(getwininfo(), 'v:val.quickfix')) | cclose | endif
+  autocmd Filetype sh nmap <silent> <leader>' ysiW"
+endif
+augroup END
+
 "" Convenience functions
 " Move between windows with control+h/j/k/l
 map <C-j> <C-W>j

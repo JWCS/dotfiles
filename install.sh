@@ -26,6 +26,9 @@ function _dist_arch(){
     *) return 1 ;;
   esac
 }
+function _dist_arch_long(){
+  uname -m # See _dist_arch expected output values above
+}
 
 #https://stackoverflow.com/a/37939589/
 function _version_normalize(){
@@ -70,9 +73,16 @@ function _install_gh_tgz(){(
   local REPO=${1:?} ; shift
   local DL_PATH=${1:?} ; shift
   local DL_TGZ=${DL_PATH##*/}
+  local compr
+  case "$DL_TGZ" in
+    *.gz|*.tgz) compr="-z" ;;
+    *.xz) compr="--xz" ;;
+    *) { : "Unrecognized compression ext"; return 1;} ;;
+  esac
   _mkcd /tmp/Downloads
   [ -f ${DL_TGZ:?} ] || curl -OfL https://github.com/$REPO/releases/download/$DL_PATH || return $?
-  sudo tar xvzf ${DL_TGZ:?} -C /usr/local/bin/ "$@" || return $?
+
+  sudo tar xvf ${DL_TGZ:?} -C /usr/local/bin/ "$compr" "$@" || return $?
 )}
 
 function install-apt-fast(){
@@ -92,6 +102,17 @@ function install-git(){
   sudo add-apt-repository -y ppa:${PPA:?} || return $?
   sudo apt-fast update || return $?
   sudo apt-fast -y install git git-lfs || return $?
+}
+
+function install-shellcheck(){
+  _has_cmd shellcheck ||  {
+    local ARCH VERSION REPO
+    REPO="koalaman/shellcheck"
+    ARCH=$(_dist_arch_long) || return $?
+    VERSION=$(_gh_latest_version $REPO) || return $?
+    _install_gh_tgz $REPO "v${VERSION}/shellcheck-v${VERSION}.linux.${ARCH}.tar.xz" \
+      --wildcards 'shellcheck*/shellcheck*' --strip-components 1
+  }
 }
 
 function install-keychain(){
@@ -267,16 +288,14 @@ function install-docker(){
   _install_gh_deb $REPO "v${VERSION}/dive_${VERSION}_linux_${ARCH}.deb"
 }
 
-# Utilities
-# https://stackoverflow.com/questions/2683279/how-to-detect-if-a-script-is-being-sourced
-(return 0 2>/dev/null) && sourced=1 || sourced=0
-
-function _install-list(){
-declare -F | awk '$3~/^install-/{sub(/^install-/,"",$3); print $3}'
-}
-
 # If not sourced
-if [ "$sourced" -eq "0" ]; then
+if ! (return 0 2>/dev/null); then
+  function _install-list(){
+    declare -F | awk '$3~/^install-/{sub(/^install-/,"",$3); print $3}'
+  }
+  function _install-list-full(){
+    declare -F | awk '$3~/^install-/{print $3}'
+  }
   function _arg-alias(){ sed -r "s/(^| )$1($| )/\1$2 /g"; }
   function _arg-alias-list-expr(){
     printf -- 'sed -r '
@@ -295,14 +314,12 @@ if [ "$sourced" -eq "0" ]; then
   if [ -z "$1" ]; then
     _install-list
   elif [ "$1" == "all" ]; then
-    _install-list | while read -r short; do
-      eval install-$short || { echo "ERROR $?"; break; }
-    done
+    ARGS="$(_install-list-full | tr '\n' ' ' | _chain_space)"
   else
     ARGS=$(echo "$*" | _chain_space | eval $(_arg-alias-list-expr))
-    eval $ARGS || echo "ERROR $?"
-    echo Done
   fi
+  set -x
+  if eval "$ARGS"; then : Done ; else : "ERROR $?"; exit 1; fi
 fi
 
 # install.sh

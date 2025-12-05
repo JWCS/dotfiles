@@ -53,6 +53,10 @@ if !(empty($VRC_LANG_MD))
   Plug 'preservim/vim-markdown'
 endif
 
+if !(empty($VRC_LANG_SH))
+  Plug 'itspriddle/vim-shellcheck'
+endif
+
 Plug 'LunarWatcher/auto-pairs'
 
 call plug#end()

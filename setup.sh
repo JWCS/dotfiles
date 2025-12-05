@@ -66,9 +66,10 @@ function _sshconf_init(){
 mkdir -p ~/.ssh
 cat <<EOF >> ~/.ssh/config
 # .ssh/config
-HashKnownHosts yes
+HashKnownHosts no
 HostKeyAlgorithms +ssh-rsa
 PubkeyAcceptedKeyTypes +ssh-rsa
+StrictHostKeyChecking accept-new
 
 #Host gitlab.corp.net
 #HostName gitlab.corp.net
@@ -88,6 +89,7 @@ cat <<EOF >> ~/.bashrc
 #export VRC_FEAT_CMAKE=1
 #export VRC_FEAT_TP_STD=1
 #export VRC_LANG_MD=1
+#export VRC_LANG_SH=1
 
 EOF
 }

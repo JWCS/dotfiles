@@ -5,6 +5,10 @@
 # Everything else is auto-detected, or uses env var flags.
 # Note: some files can harmlessly be ran again; this one, is bad
 
+function _has_cmd() {
+  type "$1" &>/dev/null
+}
+
 # files structure
 function _mk_file_structure(){
 mkdir -p ~/.local/share ~/.local/bin
@@ -34,8 +38,15 @@ EOF
 
 # tmux
 function _ln_tmux(){
-[ -f ~/.tmux.conf ] || ln -rs ~/.dotfiles/.tmux.conf ~/.tmux.conf
+[ -f ~/.tmux.conf ] || ln -rs ~/.dotfiles/.tmux.conf ~/.tmux.conf || return $?
 # Note: this references tpm, which has to be installed as well...
+if _has_cmd tmux; then # TODO: cleanup
+  tmux new-session -s setup
+  tmux send-keys -t setup ~/.tmux/plugins/tpm/bin/install_plugins Enter
+  tmux send-keys -t setup ~/.tmux/plugins/tpm/bin/update_plugins all Enter
+  tmux kill-session -t setup
+  tmux new-session -d 'exit' || return $? # Run/install tpm
+fi
 }
 
 # git
@@ -92,6 +103,9 @@ cat <<EOF >> ~/.bashrc
 #export VRC_LANG_SH=1
 
 EOF
+if _has_cmd vim; then # TODO: cleanup
+  vim '+:PlugUpdate' '+:qa'
+fi
 }
 
 # This is to catch various things that add to .bashrc
@@ -109,6 +123,7 @@ EOF
 function setup(){
 _mk_file_structure && \
 touch ~/.sudo_as_admin_successful && \
+./install.sh git tmux vim && \
 _ln_inputrc && \
 _bashrc_init && \
 _ln_tmux && \

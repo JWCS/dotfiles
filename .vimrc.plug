@@ -40,12 +40,10 @@ endif
 
 " tpope plugins; got one, might as well get all
 if !(empty($VRC_FEAT_TP_STD))
-  Plug 'tpope/vim-repeat'
   Plug 'tpope/vim-abolish'
   Plug 'tpope/vim-surround'
   Plug 'tpope/vim-unimpaired'
   Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-obsession' " For tmux session restore
 endif
 
 if !(empty($VRC_LANG_MD))
@@ -57,6 +55,9 @@ if !(empty($VRC_LANG_SH))
   Plug 'itspriddle/vim-shellcheck'
 endif
 
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-obsession' " For tmux session restore
+Plug 'tpope/vim-repeat'
 Plug 'LunarWatcher/auto-pairs'
 
 call plug#end()

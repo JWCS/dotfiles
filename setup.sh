@@ -41,11 +41,11 @@ function _ln_tmux(){
 [ -f ~/.tmux.conf ] || ln -rs ~/.dotfiles/.tmux.conf ~/.tmux.conf || return $?
 # Note: this references tpm, which has to be installed as well...
 if _has_cmd tmux; then # TODO: cleanup
-  tmux new-session -s setup
-  tmux send-keys -t setup ~/.tmux/plugins/tpm/bin/install_plugins Enter
-  tmux send-keys -t setup ~/.tmux/plugins/tpm/bin/update_plugins all Enter
-  tmux kill-session -t setup
-  tmux new-session -d 'exit' || return $? # Run/install tpm
+  tmux new-session -d -s setup
+  tmux send-keys -t setup '~/.tmux/plugins/tpm/bin/install_plugins && ~/.tmux/plugins/tpm/bin/update_plugins all; exit' Enter
+  #tmux send-keys -t setup '~/.tmux/plugins/tpm/bin/install_plugins' Enter
+  #tmux send-keys -t setup '~/.tmux/plugins/tpm/bin/update_plugins all' Enter
+  #tmux kill-session -t setup
 fi
 }
 
@@ -123,7 +123,7 @@ EOF
 function setup(){
 _mk_file_structure && \
 touch ~/.sudo_as_admin_successful && \
-./install.sh git tmux vim && \
+~/.dotfiles/install.sh git tmux vim curl && \
 _ln_inputrc && \
 _bashrc_init && \
 _ln_tmux && \

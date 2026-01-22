@@ -85,6 +85,17 @@ colorscheme desert
 
 " Redraw
 map <silent> <leader>l :redraw!<cr>
+" Reload vimrc
+nnoremap <leader>s :source $MYVIMRC<CR>
+
+"" Convenience functions
+" Move between windows with control+h/j/k/l
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+xnoremap p "_dP
 
 "" Vim file management augroup
 " Strip trailing whitespace from file!
@@ -103,30 +114,37 @@ autocmd BufWritePre * :call <SID>StripTrailingWhiteSpaces()
 "autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 augroup END
 
-augroup lang_specif
-autocmd!
-if !(empty($VRC_LANG_SH))
-  autocmd Filetype sh nnoremap <silent> <leader>c :ShellCheck! -x<cr><cr>
-  " :if !empty(filter(getwininfo(), 'v:val.quickfix')) | cclose | endif
-  autocmd Filetype sh nmap <silent> <leader>' ysiW"
-endif
-augroup END
-
-"" Convenience functions
-" Move between windows with control+h/j/k/l
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
-
-xnoremap p "_dP
-
 "" Some lang-specif settings
+fun! DockerfileFoldExpr(lnum)
+  let content = getline(a:lnum)
+  if content =~ '^\s*$' | return '-1' | endif " Blanks
+  if content =~ '^FROM' | return '0' | endif " FROM
+  if content =~ '^##' | return '0' | endif " Comment
+  if content =~ '^#' | return '1' | endif " Comment
+  if content =~ '^\u+' | return '>1' | endif " ALLCAP Directive
+  "if content =~ '^\s\+\S' | return '3' | endif " Indent
+  return '2' " Normal sections
+endfun
+
 augroup filetype_settings
 au!
 au FileType make        setl noet ts=8 sw=8 sts=0
-au FileType gitconfig   setl noet ts=8 sw=8 sts=0
+
 au BufRead,BufNewFile,BufReadPost .gitconfig.* setfiletype gitconfig
+au FileType gitconfig   setl noet ts=8 sw=8 sts=0
+
 au Filetype python      setl foldmethod=indent foldnestmax=2
+
+if !(empty($VRC_LANG_SH))
+  au Filetype sh nnoremap <silent> <leader>c :ShellCheck! -x<cr><cr>
+  " :if !empty(filter(getwininfo(), 'v:val.quickfix')) | cclose | endif
+endif
+if !(empty($VRC_FEAT_TP_STD))
+  au Filetype sh nmap <silent> <leader>' ysiW"
+endif
+
+au FileType dockerfile setl noet ts=2 sw=2 sts=2 foldmethod=expr foldlevel=2
+  \ foldexpr=DockerfileFoldExpr(v:lnum)
+
 augroup END
 

@@ -19,3 +19,4 @@ compile_commands.json
 
 # Various editors stuff
 .vscode/
+.claude/

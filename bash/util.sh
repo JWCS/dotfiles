@@ -49,6 +49,10 @@ cleardir () {
   ls -A | xargs rm -rf
 }
 
+mkcd(){
+  mkdir -p "$1" && cd "$1"
+}
+
 function sed-all(){
   local from to path
   from=${1:?}

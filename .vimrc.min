@@ -87,6 +87,7 @@ colorscheme desert
 map <silent> <leader>l :redraw!<cr>
 " Reload vimrc
 nnoremap <leader>s :source $MYVIMRC<CR>
+" Reload :e :edit :e! (discard), set autoread?
 
 "" Convenience functions
 " Move between windows with control+h/j/k/l

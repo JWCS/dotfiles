@@ -26,6 +26,8 @@
 	c = commit
 	d = diff --diff-filter=MR
 	ds = diff --stat
-	stg = diff --staged
+	dp = diff --diff-filter=MR HEAD^
+	dsp = diff --stat HEAD^
+	stg = diff --staged --diff-filter=MR
 	sstg = diff --staged --stat
 

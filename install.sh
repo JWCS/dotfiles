@@ -288,6 +288,22 @@ function install-docker(){
   _install_gh_deb $REPO "v${VERSION}/dive_${VERSION}_linux_${ARCH}.deb"
 }
 
+function install-slimtoolkit(){
+  _has_cmd slim || {
+    curl -sL https://raw.githubusercontent.com/slimtoolkit/slim/master/scripts/install-slim.sh | sudo -E bash -
+#    local ARCH VERSION REPO
+#    REPO="slimtoolkit/slim"
+#    case "$(_dist_arch_long)" in
+#      x86_64) ARCH="";;
+#      arm64) ARCH="_arm64";;
+#      *) : 'Error: too lazy to add more arch switches'; return 1;;
+#    esac
+#    VERSION=$(_gh_latest_version $REPO) || return $?
+#    _install_gh_tgz $REPO "${VERSION}/dist_linux${ARCH}.tar.gz" \
+#      --strip-components 1
+  }
+}
+
 # If not sourced
 if ! (return 0 2>/dev/null); then
   function _install-list(){

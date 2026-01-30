@@ -73,6 +73,11 @@ if _has_cmd glow; then
   source <(glow completion bash)
 fi
 
+# shellcheck
+if [ "$VRC_LANG_SH" = '1' ] && ! _has_cmd shellcheck; then
+  >&2 echo -e "WARNING: VRC_LANG_SH enabled, but shellcheck not installed!\n~/.dotfiles/install.sh shellcheck"
+fi
+
 # legacy / todo: cuda, opam, ros
 # ros2:
 #buildless (){

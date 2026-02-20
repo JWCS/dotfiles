@@ -85,6 +85,17 @@ function _install_gh_tgz(){(
   sudo tar xvf ${DL_TGZ:?} -C /usr/local/bin/ "$compr" "$@" || return $?
 )}
 
+function _install_gh_appimg(){(
+  local REPO=${1:?}
+  local DL_PATH=${2:?}
+  local NAME=${3:?}
+  local DL_IMG=${DL_PATH##*/}
+  _mkcd /tmp/Downloads
+  [ -f $DL_IMG ] || curl -OL https://github.com/$REPO/releases/download/$DL_PATH || return $?
+  chmod +x ./$DL_IMG
+  sudo cp -v ./$DL_IMG /usr/local/bin/$NAME
+)}
+
 function install-apt-fast(){
   echo $FUNCNAME
   _has_cmd apt-fast || {
@@ -200,6 +211,26 @@ function install-vim(){
 #  _has_ppa $PPA \
 #  || { sudo add-apt-repository -y ppa:${PPA:?} && sudo apt-fast update; } || return $?
   _has_pkg vim-gtk3 || sudo apt-fast install -y vim-gtk3
+}
+
+function install-nvim(){
+  echo $FUNCNAME
+  local ARCH VERSION REPO
+  REPO="neovim/neovim"
+  ARCH=$(_dist_arch_long) || return $?
+  VERSION=$(_gh_latest_version $REPO) || return $?
+  #_install_gh_tgz $REPO "v${VERSION}/nvim-linux-${ARCH}.tar.gz" \
+  #  -C /usr/local/ --strip-components 1
+  _install_gh_appimg $REPO "v${VERSION}/nvim-linux-$ARCH.appimage" nvim
+}
+function install-nvim-backport(){
+  echo $FUNCNAME
+  local ARCH VERSION REPO
+  REPO="neovim/neovim-releases"
+  ARCH=$(_dist_arch_long) || return $?
+  VERSION=$(_gh_latest_version $REPO) || return $?
+  #_install_gh_deb $REPO "v${VERSION}/nvim-linux-${ARCH}.deb"
+  _install_gh_appimg $REPO "v${VERSION}/nvim-linux-$ARCH.appimage" nvim
 }
 
 function install-glow(){

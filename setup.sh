@@ -90,6 +90,24 @@ StrictHostKeyChecking accept-new
 EOF
 }
 
+# nvim: symlink config dir and write feature flag stubs to .bashrc
+function _nvimconf_init(){
+mkdir -p ~/.config
+[ -e ~/.config/nvim ] || ln -rs ~/.dotfiles/nvim ~/.config/nvim
+cat <<EOF >> ~/.bashrc
+# nvim (same feature flags as vim; nvim reads these too)
+#export VRC_FEAT_COPILOT=1
+#export VRC_FEAT_TP_STD=1
+#export VRC_LANG_SH=1
+
+EOF
+if _has_cmd nvim; then
+  # Pre-install plugins headlessly; errors on first run are expected (plugin not yet
+  # cloned), they resolve on second run. Alternatively: open nvim and :Lazy sync
+  nvim --headless -c "Lazy sync" -c "qa" 2>/dev/null || true
+fi
+}
+
 # vim: toggle features w env vars
 function _vimrc_init(){
 ln -rs ~/.dotfiles/.vimrc ~/.vimrc

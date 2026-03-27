@@ -5,16 +5,16 @@
 source ~/.dotfiles/bash/util.sh
 
 ## Auto-setup
-source ~/.dotfiles/git/git_functions.sh
+source ~/.dotfiles/git/bash.sh
 
 # docker
 if _has_cmd docker; then
-  source ~/.dotfiles/docker/docker_functions.sh
+  source ~/.dotfiles/docker/bash.sh
 fi
 
 # tmux
 if _has_cmd tmux; then
-  source ~/.dotfiles/tmux/tmux_functions.sh
+  source ~/.dotfiles/tmux/bash.sh
 fi
 
 # direnv

@@ -26,18 +26,24 @@ mv ~/.bashrc ~/.bashrc_orig
 cat <<EOF > ~/.bashrc
 # ~/.bashrc
 source ~/.bashrc_orig
-source ~/.dotfiles/.bashrc_common
+source ~/.dotfiles/bash/rc_common.sh
 
 #export BRC_FEAT_KEYCHAINS="id_rsa"
 #export BRC_FEAT_GIT_PROXY=1
 #export BRC_FEAT_WSL=1
-source ~/.dotfiles/.bashrc_features
+source ~/.dotfiles/bash/rc_features.sh
 
 EOF
 }
 
 # tmux
 function _ln_tmux(){
+cat <<EOF > ~/.tmux.conf
+# ~/.tmux.conf
+source ~/.dotfiles/tmux/default.tmux.conf
+source ~/.dotfiles/tmux/plugins.tmux.conf
+
+EOF
 [ -f ~/.tmux.conf ] || ln -rs ~/.dotfiles/.tmux.conf ~/.tmux.conf || return $?
 # Note: this references tpm, which has to be installed as well...
 if _has_cmd tmux; then # TODO: cleanup
@@ -51,17 +57,15 @@ fi
 
 # git
 function _gitconf_init(){
-[ -f ~/.gitignore_global ] || ln -rs ~/.dotfiles/git/.gitignore_global ~/.gitignore_global
-[ -f ~/.gitattributes_global ] || ln -rs ~/.dotfiles/git/.gitattributes_global ~/.gitattributes_global
 cat <<EOF > ~/.gitconfig
 # ~/.gitconfig
 [user]
 #	name = My Name
 #	email = my@email
 [include]
-	path = ~/.dotfiles/git/.gitconfig
-	#path = ~/.dotfiles/git/.gitconfig.delta
-  #path = ~/.dotfiles/wsl2/.gitconfig
+	path = ~/.dotfiles/git/default.gitconfig
+	#path = ~/.dotfiles/git/delta.gitconfig
+  #path = ~/.dotfiles/wsl2/default.gitconfig
 
 # git-proxy:
 #[http]
@@ -92,7 +96,13 @@ EOF
 
 # vim: toggle features w env vars
 function _vimrc_init(){
-ln -rs ~/.dotfiles/.vimrc ~/.vimrc
+cat <<EOF >> ~/.vimrc
+" ~/.vimrc
+
+source ~/.dotfiles/.vimrc.min
+source ~/.dotfiles/.vimrc.plug
+
+EOF
 cat <<EOF >> ~/.bashrc
 # vim
 #export VRC_FEAT_COPILOT=1

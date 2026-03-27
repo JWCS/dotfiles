@@ -82,6 +82,7 @@ set foldmethod=syntax
 set foldlevel=2
 
 colorscheme desert
+" koehler ?
 
 " Redraw
 map <silent> <leader>l :redraw!<cr>

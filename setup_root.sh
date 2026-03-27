@@ -22,8 +22,6 @@ _ln_mirror_root ~/.tmux || return $?
 _ln_mirror_root ~/.vimrc || return $?
 _ln_mirror_root ~/.vim || return $?
 _ln_mirror_root ~/.ssh || return $?
-_ln_mirror_root ~/.gitattributes_global || return $?
-_ln_mirror_root ~/.gitignore_global || return $?
 _ln_mirror_root ~/.gitconfig || return $?
 # These aren't created by setup.sh, but still should be shared?
 mkdir -p ~/.local && _ln_mirror_root ~/.local || return $?

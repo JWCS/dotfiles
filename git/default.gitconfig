@@ -8,8 +8,8 @@
 
 # Common
 [core]
-	excludesfile = ~/.gitignore_global
-	attributesfile = ~/.gitattributes_global
+	excludesfile = ~/.dotfiles/git/global.gitignore
+	attributesfile = ~/.dotfiles/git/global.gitattributes
 	editor = vim
 	whitespace = cr-at-eol # Ignore ^M in diffs?
 [init]
@@ -30,4 +30,4 @@
 	enabled = true
 	autoupdate = true
 [include]
-	path=~/.dotfiles/git/.gitconfig.alias
+	path=~/.dotfiles/git/alias.gitconfig

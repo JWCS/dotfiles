@@ -28,6 +28,8 @@
 	ds = diff --stat
 	dp = diff --diff-filter=MR HEAD^
 	dsp = diff --stat HEAD^
+	dps = diff --stat HEAD^
 	stg = diff --staged --diff-filter=MR
 	sstg = diff --staged --stat
+	stgs = diff --staged --stat
 

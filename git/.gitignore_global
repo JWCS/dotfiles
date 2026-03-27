@@ -7,7 +7,7 @@ tmp/
 .envrc
 
 # Python stuff I'm uncertain about
-__init__.py
+#__init__.py
 *.egg-info/
 requirements.txt
 setup.py

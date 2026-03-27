@@ -144,7 +144,7 @@ if !(empty($VRC_FEAT_TP_STD))
   au Filetype sh nmap <silent> <leader>' ysiW"
 endif
 
-au FileType dockerfile setl noet ts=2 sw=2 sts=2 foldmethod=expr foldlevel=2
+au FileType dockerfile setl ts=2 sw=2 sts=2 foldmethod=expr foldlevel=2
   \ foldexpr=DockerfileFoldExpr(v:lnum)
 
 augroup END

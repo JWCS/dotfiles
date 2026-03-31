@@ -99,8 +99,8 @@ function _vimrc_init(){
 cat <<EOF >> ~/.vimrc
 " ~/.vimrc
 
-source ~/.dotfiles/.vimrc.min
-source ~/.dotfiles/.vimrc.plug
+source ~/.dotfiles/vim/min.vimrc
+source ~/.dotfiles/vim/plug.vimrc
 
 EOF
 cat <<EOF >> ~/.bashrc

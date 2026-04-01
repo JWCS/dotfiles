@@ -47,6 +47,10 @@ if !(empty($VRC_FEAT_TP_STD))
   Plug 'tpope/vim-fugitive'
 endif
 
+if !(empty($VRC_LANG_JUST))
+  Plug 'NoahTheDuke/vim-just'
+endif
+
 if !(empty($VRC_LANG_MD))
   Plug 'godlygeek/tabular'
   Plug 'preservim/vim-markdown'
@@ -61,7 +65,6 @@ Plug 'tpope/vim-obsession' " For tmux session restore
 Plug 'tpope/vim-repeat'
 Plug 'LunarWatcher/auto-pairs'
 Plug 'farmergreg/vim-lastplace'
-Plug 'tpope/vim-obsession' " For tmux session restore
 
 call plug#end()
 

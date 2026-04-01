@@ -105,12 +105,13 @@ source ~/.dotfiles/vim/plug.vimrc
 EOF
 cat <<EOF >> ~/.bashrc
 # vim
-#export VRC_FEAT_COPILOT=1
-#export VRC_FEAT_COC=1
-#export VRC_FEAT_CMAKE=1
-#export VRC_FEAT_TP_STD=1
+#export VRC_LANG_JUST=1
 #export VRC_LANG_MD=1
 #export VRC_LANG_SH=1
+#export VRC_FEAT_CMAKE=1
+#export VRC_FEAT_COC=1
+#export VRC_FEAT_COPILOT=1
+#export VRC_FEAT_TP_STD=1
 
 EOF
 if _has_cmd vim; then # TODO: cleanup

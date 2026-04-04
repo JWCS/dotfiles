@@ -17,13 +17,13 @@ mkdir -p ~/.local/share ~/.local/bin
 # inputrc
 function _ln_inputrc(){
 [ -f ~/.inputrc ] || ln -rs ~/.dotfiles/.inputrc ~/.inputrc
+>&2 echo "Linked .inputrc"
 }
 
 # bash
 function _bashrc_init(){
-[ -f ~/.bashrc_orig ] && { echo "ERROR: bashrc_orig already exists!"; return 1; }
-mv ~/.bashrc ~/.bashrc_orig
-cat <<EOF > ~/.bashrc
+[ -f ~/.bashrc_orig ] || mv ~/.bashrc ~/.bashrc_orig
+cat <<EOF >> ~/.bashrc
 # ~/.bashrc
 source ~/.bashrc_orig
 source ~/.dotfiles/bash/rc_common.sh
@@ -34,17 +34,18 @@ source ~/.dotfiles/bash/rc_common.sh
 source ~/.dotfiles/bash/rc_features.sh
 
 EOF
+>&2 echo "Wrote .bashrc"
 }
 
 # tmux
-function _ln_tmux(){
-cat <<EOF > ~/.tmux.conf
+function _tmux_init(){
+cat <<EOF >> ~/.tmux.conf
 # ~/.tmux.conf
 source ~/.dotfiles/tmux/default.tmux.conf
 source ~/.dotfiles/tmux/plugins.tmux.conf
 
 EOF
-[ -f ~/.tmux.conf ] || ln -rs ~/.dotfiles/.tmux.conf ~/.tmux.conf || return $?
+>&2 echo "Wrote .tmux.conf"
 # Note: this references tpm, which has to be installed as well...
 if _has_cmd tmux; then # TODO: cleanup
   tmux new-session -d -s setup
@@ -53,11 +54,12 @@ if _has_cmd tmux; then # TODO: cleanup
   #tmux send-keys -t setup '~/.tmux/plugins/tpm/bin/update_plugins all' Enter
   #tmux kill-session -t setup
 fi
+>&2 echo "tmux: tried to update plugins"
 }
 
 # git
 function _gitconf_init(){
-cat <<EOF > ~/.gitconfig
+cat <<EOF >> ~/.gitconfig
 # ~/.gitconfig
 [user]
 #	name = My Name
@@ -65,7 +67,7 @@ cat <<EOF > ~/.gitconfig
 [include]
 	path = ~/.dotfiles/git/default.gitconfig
 	#path = ~/.dotfiles/git/delta.gitconfig
-  #path = ~/.dotfiles/wsl2/default.gitconfig
+	#path = ~/.dotfiles/wsl2/default.gitconfig
 
 # git-proxy:
 #[http]
@@ -75,6 +77,7 @@ cat <<EOF > ~/.gitconfig
 #	proxy="socks5://127.0.0.1:1080"
 
 EOF
+>&2 echo "Wrote .gitconfig"
 }
 
 function _sshconf_init(){
@@ -92,6 +95,7 @@ StrictHostKeyChecking accept-new
 #ProxyCommand nc -v -x 127.0.0.1:1080 %h %p
 
 EOF
+>&2 echo "Wrote .ssh/config"
 }
 
 # vim: toggle features w env vars
@@ -103,6 +107,7 @@ source ~/.dotfiles/vim/min.vimrc
 source ~/.dotfiles/vim/plug.vimrc
 
 EOF
+>&2 echo "Wrote .vimrc"
 cat <<EOF >> ~/.bashrc
 # vim
 #export VRC_LANG_JUST=1
@@ -117,6 +122,7 @@ EOF
 if _has_cmd vim; then # TODO: cleanup
   vim '+:PlugUpdate' '+:qa'
 fi
+>&2 echo "vim: attempted to update plugins"
 }
 
 # This is to catch various things that add to .bashrc
@@ -137,12 +143,13 @@ touch ~/.sudo_as_admin_successful && \
 ~/.dotfiles/install.sh git tmux vim curl && \
 _ln_inputrc && \
 _bashrc_init && \
-_ln_tmux && \
+_tmux_init && \
 _gitconf_init && \
 _sshconf_init && \
 _vimrc_init && \
-_bashrc_footer && \
-echo "Remember to setup .gitconfig, .ssh/config, and ca-certificate if corp pc"
+_bashrc_footer || return $?
+>&2 echo "Clean up prior entries in the above files"
+>&2 echo "Remember to setup .gitconfig, .ssh/config, and ca-certificate if corp pc"
 }
 
 # Utilities

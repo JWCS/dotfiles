@@ -46,8 +46,10 @@ function _min_ub_ver(){
 # Always strips leading v, because easier to add it back than to remove it
 function _gh_latest_version(){
   # Where $1 is owner/repo
+  # Note: sometimes curl returns ws minified, sometimes not! ... just use jq
+  _has_cmd jq || { _check_apt-fast && sudo apt-fast install -y jq ;} || return $?
   curl -sL "https://api.github.com/repos/$1/releases/latest" \
-  | awk -F\" '/"tag_name":/{print $(NF-1)}' | sed -E 's/v(.*)/\1/g'
+  | jq -j -e '.tag_name | ltrimstr("v")'
 }
 
 function _check_apt-fast(){
@@ -96,6 +98,9 @@ function _install_gh_appimg(){(
   sudo cp -v ./$DL_IMG /usr/local/bin/$NAME
 )}
 
+function install-curl(){
+  _has_cmd curl || sudo apt install -y curl
+}
 function install-apt-fast(){
   echo $FUNCNAME
   _has_cmd apt-fast || {

@@ -47,7 +47,7 @@ function _min_ub_ver(){
 function _gh_latest_version(){
   # Where $1 is owner/repo
   # Note: sometimes curl returns ws minified, sometimes not! ... just use jq
-  _has_cmd jq || { _check_apt-fast && sudo apt-fast install -y jq ;} || return $?
+  _has_cmd jq || install-jq || return $?
   curl -sL "https://api.github.com/repos/$1/releases/latest" \
   | jq -j -e '.tag_name | ltrimstr("v")'
 }
@@ -87,7 +87,8 @@ function _install_gh_tgz(){(
   sudo tar xvf ${DL_TGZ:?} -C /usr/local/bin/ "$compr" "$@" || return $?
 )}
 
-function _install_gh_appimg(){(
+# Also works for appimg
+function _install_gh_bin(){(
   local REPO=${1:?}
   local DL_PATH=${2:?}
   local NAME=${3:?}
@@ -108,6 +109,18 @@ function install-apt-fast(){
     sudo apt-get update || return $?
     sudo apt-get -y install apt-fast
   }
+}
+
+function install-jq(){
+  echo $FUNCNAME
+  local ARCH VERSION REPO
+  REPO="jqlang/jq"
+  ARCH=$(_dist_arch) || return $?
+  #VERSION=$(_gh_latest_version $REPO) || return $? # Err... this uses jq
+  VERSION=$(curl -sSL "https://api.github.com/repos/$REPO/releases/latest" \
+    | { egrep -m1 -o '"tag_name": ?"[^"]+",' | sed -E 's/.*"([^"]+)",$/\1/g'; cat - >/dev/null; }) || return $?
+  _install_gh_bin $REPO "${VERSION}/jq-linux-$ARCH" jq || return $?
+  jq --version >&2
 }
 
 function install-git(){
@@ -226,7 +239,7 @@ function install-nvim(){
   VERSION=$(_gh_latest_version $REPO) || return $?
   #_install_gh_tgz $REPO "v${VERSION}/nvim-linux-${ARCH}.tar.gz" \
   #  -C /usr/local/ --strip-components 1
-  _install_gh_appimg $REPO "v${VERSION}/nvim-linux-$ARCH.appimage" nvim
+  _install_gh_bin $REPO "v${VERSION}/nvim-linux-$ARCH.appimage" nvim
 }
 function install-nvim-backport(){
   echo $FUNCNAME
@@ -235,7 +248,7 @@ function install-nvim-backport(){
   ARCH=$(_dist_arch_long) || return $?
   VERSION=$(_gh_latest_version $REPO) || return $?
   #_install_gh_deb $REPO "v${VERSION}/nvim-linux-${ARCH}.deb"
-  _install_gh_appimg $REPO "v${VERSION}/nvim-linux-$ARCH.appimage" nvim
+  _install_gh_bin $REPO "v${VERSION}/nvim-linux-$ARCH.appimage" nvim
 }
 
 function install-glow(){
@@ -279,7 +292,7 @@ function install-common-apt(){
   echo $FUNCNAME
   _check_apt-fast || return $?
   _has_cmd ag || sudo apt-fast install -y silversearcher-ag || return $?
-  _has_cmd jq || sudo apt-fast install -y jq || return $?
+  _has_cmd jq || install-jq || return $?
   _has_cmd rsync || sudo apt-fast install -y rsync || return $?
 }
 
@@ -317,6 +330,10 @@ function install-docker(){
   #newgrp - docker # This launches new shell... no pls
   docker version || echo "NOTE: you must logout and login for non-sudo docker to take effect"
 
+  install-dive
+}
+
+function install-dive(){
   local ARCH VERSION REPO
   REPO="wagoodman/dive"
   ARCH=$(_dist_arch) || return $?

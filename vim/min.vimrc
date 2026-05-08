@@ -99,6 +99,10 @@ map <C-l> <C-W>l
 
 xnoremap p "_dP
 
+" Insert single character: here, end
+nnoremap <Leader>i i_<Esc>r
+nnoremap <Leader>e i<Right>_<Esc>r
+
 "" Vim file management augroup
 " Strip trailing whitespace from file!
 fun! <SID>StripTrailingWhiteSpaces()
@@ -115,6 +119,25 @@ autocmd BufWritePre * :call <SID>StripTrailingWhiteSpaces()
 " Return to last edit position when opening files (You want this!)
 "autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 augroup END
+
+" Auto-toggle 'paste/nopaste' mode
+" https://stackoverflow.com/a/38258720/
+" https://coderwall.com/p/if9mda/automatically-set-paste-mode-in-vim-when-pasting-in-insert-mode
+" Wait, should already be enabled tmux & vim??
+" . Note: OK, per ^^, no longer need WrapForTmux, tmux does the wrapping
+" . Not sure why still need this in vim; vim/nvim had support for a while?
+" . . OH! only if TERM is xterm*, not gnome; currently set screen-256color ; try to update TERM
+fun! XTermPasteBegin()
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
+endfun
+
+let &t_SI .= "\<Esc>[?2004h"
+let &t_EI .= "\<Esc>[?2004l"
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
 
 "" Some lang-specif settings
 fun! DockerfileFoldExpr(lnum)
@@ -137,6 +160,7 @@ au FileType gitconfig   setl noet ts=8 sw=8 sts=0
 
 au Filetype python      setl foldmethod=indent foldnestmax=2
 
+au Filetype sh setl ts=2 sw=2 sts=2 foldmethod=indent foldlevel=2
 if !(empty($VRC_LANG_SH))
   au Filetype sh nnoremap <silent> <leader>c :ShellCheck! -x<cr><cr>
   " :if !empty(filter(getwininfo(), 'v:val.quickfix')) | cclose | endif

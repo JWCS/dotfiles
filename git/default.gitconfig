@@ -26,6 +26,9 @@
 	#cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
 [diff "sopsdiffer"]
 	textconv = "sops decrypt"
+[merge "json"]
+  name = custom merge driver for json files
+  driver = git-json-merge %A %O %B
 [rerere]
 	enabled = true
 	autoupdate = true

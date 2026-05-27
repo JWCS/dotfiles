@@ -87,7 +87,13 @@ fi
 ## Explicit Features
 
 # BRC_FEAT_KEYCHAINS="id_rsa"
-if _has_cmd keychain && _is_nonempty BRC_FEAT_KEYCHAINS; then
+# Skip when:
+#   - non-interactive (no TTY)
+#   - explicitly opted out (BRC_FEAT_KEYCHAINS_SKIP=1 — set by automation
+#     like cpk-host-launch's send-keys flow where TTY is present but no
+#     human is around to type the passphrase).
+if _has_cmd keychain && _is_nonempty BRC_FEAT_KEYCHAINS \
+   && [ -t 0 ] && [ -z "${BRC_FEAT_KEYCHAINS_SKIP:-}" ]; then
   # Simplify downstream ssh/git pass
   eval `keychain --eval $BRC_FEAT_KEYCHAINS 2>/dev/null`
 fi

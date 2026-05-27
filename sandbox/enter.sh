@@ -42,6 +42,15 @@ fi
 #   --link-journal=no  : host+container share machine-id (overlay) -> skip the
 #                        "refusing to link journals" noise
 # /opt + /home are bound real -> Claude config, binary, projects at real paths.
+# CPK_AUTOMATION=1 (forwarded via `sudo -E` from cpk-host-launch) signals
+# that the sandbox is being launched without a human at the tty. Forward
+# BRC_FEAT_KEYCHAINS_SKIP=1 into the sandbox so the bashrc skips the
+# ssh-key passphrase prompt that would otherwise hang.
+auto_setenv=()
+if [ "${CPK_AUTOMATION:-}" = "1" ]; then
+    auto_setenv+=(--setenv=BRC_FEAT_KEYCHAINS_SKIP=1 --setenv=CPK_AUTOMATION=1)
+fi
+
 exec systemd-nspawn -q \
   --machine="$MACHINE" \
   --directory="$S/merged" \
@@ -59,4 +68,5 @@ exec systemd-nspawn -q \
   --setenv=TERM="${TERM:-xterm-256color}" \
   --setenv=CLAUDE_CONFIG_DIR=/opt/ws/global/claude \
   --setenv=PATH="$USER_HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+  "${auto_setenv[@]}" \
   /bin/bash -l

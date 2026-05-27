@@ -52,6 +52,7 @@ exec systemd-nspawn -q \
   --user="$SBX_USER" \
   --bind=/opt \
   --bind=/home \
+  --bind=/tmp/tmux-1000:/tmp/host-tmux-sock \
   --bind=/run/docker.sock \
   --bind=/mnt:/scratch \
   --setenv=HOME="$USER_HOME" \

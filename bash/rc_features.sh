@@ -125,5 +125,12 @@ if _is_set BRC_FEAT_WSL; then
   }
 fi
 
+# Inside the cpk sandbox, /tmp/host-tmux-sock is a bind-mount of the
+# host's /tmp/tmux-1000. Default-route tmux through it so commands
+# from inside the sandbox see/share host tmux sessions automatically.
+if [ -S /tmp/host-tmux-sock/default ]; then
+    alias tmux='tmux -S /tmp/host-tmux-sock/default'
+fi
+
 # .bashrc_features
 

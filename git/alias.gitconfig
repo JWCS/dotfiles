@@ -32,4 +32,9 @@
 	stg = diff --staged --diff-filter=MR
 	sstg = diff --staged --stat
 	stgs = diff --staged --stat
+	# read-only review-cursor aliases — operate on $GR (set by git-review* shell fns).
+	# Cursor commit vs its parent; no checkout. See git/bash.sh.
+	rd  = "!git diff --diff-filter=MR \"${GR:?run git-review first}^!\""
+	rds = "!git diff --stat \"${GR:?run git-review first}^!\""
+	rsh = "!git show \"${GR:?run git-review first}\""
 

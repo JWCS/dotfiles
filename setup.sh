@@ -25,6 +25,7 @@ function _bashrc_init(){
 [ -f ~/.bashrc_orig ] || mv ~/.bashrc ~/.bashrc_orig
 cat <<EOF >> ~/.bashrc
 # ~/.bashrc
+if [[ "$TERM" = xterm-ghostty ]]; then color_prompt=yes; fi
 source ~/.bashrc_orig
 source ~/.dotfiles/bash/rc_common.sh
 

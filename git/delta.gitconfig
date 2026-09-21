@@ -4,9 +4,11 @@
 [include]
 	path = ~/.local/share/delta/themes.gitconfig
 [core]
-	pager = delta
+	pager = env LESS='' delta --paging=always
+	# https://github.com/dandavison/delta/discussions/604
+	# https://github.com/dandavison/delta/issues/497
 [interactive]
-	diffFilter = delta --color-only
+	diffFilter = delta --color-only --paging=always
 [merge]
 	conflictstyle = diff3
 [diff]
@@ -15,6 +17,7 @@
 [delta]
 	dark = true
 	navigate = true
+	paging = always
 	features = line-numbers decorations chameleon
 	side-by-side = false
 	#syntax-theme = desert

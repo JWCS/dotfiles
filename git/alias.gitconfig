@@ -24,17 +24,17 @@
 [alias]
 	s = status
 	c = commit
-	d = diff --diff-filter=MR
-	ds = diff --stat
-	dp = diff --diff-filter=MR HEAD^
-	dsp = diff --stat HEAD^
-	dps = diff --stat HEAD^
+	d = diff --diff-filter=MRA
+	ds = -c core.pager=cat diff --stat
 	stg = diff --staged --diff-filter=MR
-	sstg = diff --staged --stat
-	stgs = diff --staged --stat
+	sstg = -c core.pager=cat diff --staged --stat
+	stgs = -c core.pager=cat diff --staged --stat
 	# read-only review-cursor aliases — operate on $GR (set by git-review* shell fns).
 	# Cursor commit vs its parent; no checkout. See git/bash.sh.
 	rd  = "!git diff --diff-filter=MR \"${GR:?run git-review first}^!\""
-	rds = "!git diff --stat \"${GR:?run git-review first}^!\""
+	rds = "!git -c core.pager=cat diff --stat \"${GR:?run git-review first}^!\""
 	rsh = "!git show \"${GR:?run git-review first}\""
+
+[include]
+	path = alias.dp.gitconfig
 

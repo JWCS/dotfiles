@@ -12,6 +12,9 @@
 	attributesfile = ~/.dotfiles/git/global.gitattributes
 	editor = vim
 	whitespace = cr-at-eol # Ignore ^M in diffs?
+	pager = 'less -+F -RSX'
+[pager]
+	log = false
 [init]
 	defaultBranch = master
 [push]
@@ -27,8 +30,8 @@
 [diff "sopsdiffer"]
 	textconv = "sops decrypt"
 [merge "json"]
-  name = custom merge driver for json files
-  driver = git-json-merge %A %O %B
+	name = custom merge driver for json files
+	driver = git-json-merge %A %O %B
 [rerere]
 	enabled = true
 	autoupdate = true
